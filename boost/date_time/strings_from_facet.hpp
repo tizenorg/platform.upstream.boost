@@ -6,7 +6,7 @@
  * Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
  * Author: Jeff Garland
- * $Date: 2012-01-30 21:30:03 -0500 (Mon, 30 Jan 2012) $
+ * $Date: 2012-07-27 11:15:55 -0700 (Fri, 27 Jul 2012) $
  */
 
 #include <sstream>
@@ -21,9 +21,8 @@ namespace boost { namespace date_time {
  *  all the month strings from a locale.  This is handy when building
  *  custom date parsers or formatters that need to be localized.
  *
- *! charT The type of char to use when gathering, typically char
- *        or wchar_t.
- *
+ *@param charT The type of char to use when gathering typically char
+ *             or wchar_t.
  *@param locale The locale to use when gathering the strings
  *@param short_strings True(default) to gather short strings,
  *                     false for long strings.
@@ -72,9 +71,8 @@ gather_month_strings(const std::locale& locale, bool short_strings=true)
  *  'Sunday'.  This is handy when building custom date parsers or
  *  formatters that need to be localized.
  *
- *! charT The type of char to use when gathering, typically char
- *        or wchar_t.
- *
+ *@param charT The type of char to use when gathering typically char
+ *             or wchar_t.
  *@param locale The locale to use when gathering the strings
  *@param short_strings True(default) to gather short strings,
  *                     false for long strings.

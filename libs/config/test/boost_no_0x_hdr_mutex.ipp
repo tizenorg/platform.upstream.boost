@@ -16,10 +16,6 @@ namespace boost_no_0x_hdr_mutex {
 
 int test()
 {
-  using std::mutex;
-  using std::recursive_mutex;
-  using std::timed_mutex;
-  using std::recursive_timed_mutex;
   return 0;
 }
 

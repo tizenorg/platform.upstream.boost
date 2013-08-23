@@ -16,9 +16,7 @@ namespace boost_no_0x_hdr_unordered_set {
 
 int test()
 {
-  std::unordered_set<int> s1;
-  std::unordered_multiset<int> s2;
-  return s1.empty() && s2.empty() ? 0 : 1;
+  return 0;
 }
 
 }

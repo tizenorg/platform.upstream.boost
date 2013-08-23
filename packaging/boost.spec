@@ -1,556 +1,373 @@
-%define ver 1.49.0
-%define file_version 1_49_0
-%define short_version 1_49
+Name: boost
+Summary: The Boost C++ Libraries
+Version: 1.51.0
+Release: 2
+License: Boost
+URL: http://www.boost.org/
+Group: System/Libraries
+Source: boost-1.51.0.tar.gz
+Obsoletes: boost-doc <= 1.30.2
+Obsoletes: boost-python <= 1.30.2
+Provides: boost-doc = %{version}-%{release}
 
-#Define to 0 to not generate the pdf documentation
-%define build_pdf 0
-%define package_pdf 0
+# boost is an "umbrella" package that pulls in all other boost components
+Requires: boost-chrono = %{version}-%{release}
+Requires: boost-program-options = %{version}-%{release}
+Requires: boost-thread = %{version}-%{release}
+Requires: boost-test = %{version}-%{release}
+Requires: boost-filesystem = %{version}-%{release}
+Requires: boost-system = %{version}-%{release}
 
+BuildRequires: libstdc++-devel
+BuildRequires: bzip2-libs
+BuildRequires: bzip2-devel
+BuildRequires: zlib-devel
+BuildRequires: python-devel
+BuildRequires: libicu-devel
+BuildRequires: chrpath
 
-%define disable_long_double 0
-
-%define boost_libs1 libboost_date_time libboost_filesystem libboost_graph
-%define boost_libs2 libboost_iostreams libboost_math libboost_test
-%define boost_libs3 libboost_program_options libboost_python libboost_serialization
-%define boost_libs4 libboost_signals libboost_system libboost_thread
-%define boost_libs5 libboost_wave libboost_regex libboost_regex
-%define boost_libs6 libboost_random libboost_chrono libboost_locale
-%define boost_libs7 libboost_timer
-
-%define all_libs %boost_libs0 %boost_libs2 %boost_libs3 %boost_libs4 %boost_libs5 %boost_libs6 %boost_libs7
-
-
-%define debug_package_requires %{all_libs}
-
-Name:           boost
-BuildRequires:  boost-jam
-BuildRequires:  dos2unix
-BuildRequires:  chrpath
-BuildRequires:  gcc-c++
-BuildRequires:  bzip2-devel
-BuildRequires:  zlib-devel
-BuildRequires:  expat-devel
-BuildRequires:  libicu-devel
-BuildRequires:  python-devel
-BuildRequires:  xz
-BuildRequires:  fdupes
-Url:            http://www.boost.org
-Summary:        Boost C++ Libraries
-License:        BSD-3-Clause
-Group:          Development/Libraries/C and C++
-Version:        1.49.0
-Release:        0
-Source0:        %{name}_%{file_version}.tar.bz2
-Source1:        boost-rpmlintrc
-Source4:        existing_extra_docs
-Source1001: 	boost.manifest
-
-%define _docdir %{_datadir}/doc/packages/boost
+%bcond_with tests
+%bcond_with docs_generated
+#%define sonamever 5
 
 %description
-Boost provides free peer-reviewed portable C++ source libraries. The
-emphasis is on libraries that work well with the C++ Standard Library.
-One goal is to establish "existing practice" and provide reference
-implementations so that the Boost libraries are suitable for eventual
-standardization. Some of the libraries have already been proposed for
-inclusion in the C++ Standards Committee's upcoming C++ Standard
-Library Technical Report.
+Boost provides free peer-reviewed portable C++ source libraries.  The
+emphasis is on libraries which work well with the C++ Standard
+Library, in the hopes of establishing "existing practice" for
+extensions and providing reference implementations so that the Boost
+libraries are suitable for eventual standardization. (Some of the
+libraries have already been proposed for inclusion in the C++
+Standards Committee's upcoming C++ Standard Library Technical Report.)
+%package chrono
+Summary: Run-Time component of boost chrono library
+Group: System Environment/Libraries
+Provides: libboost_chrono.so.%{version}
+%description chrono
+Run-Time support for Boost.Chrono, a set of useful time utilities.
 
-Although Boost was begun by members of the C++ Standards Committee
-Library Working Group, membership has expanded to include nearly two
-thousand members of the C++ community at large.
+%package program-options
+Summary:  Runtime component of boost program_options library
+Group: System/Libraries
+Provides: libboost_program_options.so.%{version}
 
-This package is mainly needed for updating from a prior version, the
-dynamic libraries are found in their respective package. For development
-using Boost, you also need the boost-devel package. For documentation,
-see the boost-doc package.
+%description program-options
 
+Runtime support of boost program options library, which allows program
+developers to obtain (name, value) pairs from the user, via
+conventional methods such as command line and config file.
 
+%package thread
+Summary: Runtime component of boost thread library
+Group: System/Libraries
+Provides: libboost_thread.so.%{version}
 
-%package        devel
-Summary:        Development package for Boost C++
-Group:          Development/Libraries/C and C++
-Requires:       libboost_date_time libboost_filesystem libboost_graph
-Requires:       libboost_iostreams libboost_math libboost_test
-Requires:       libboost_program_options libboost_python libboost_serialization
-Requires:       libboost_signals libboost_system libboost_thread
-Requires:       libboost_wave libboost_regex libboost_regex
-Requires:       libboost_random libboost_chrono libboost_locale
-Requires:       libboost_timer
-Requires:       libstdc++-devel
+%description thread
 
-%description    devel
-This package contains all that is needed to develop/compile
-applications that use the Boost C++ libraries. For documentation see
-the documentation packages (html, man or pdf).
-
-
-
-%package     -n boost-license
-Summary:        Boost License
-Group:          Development/Libraries/C and C++
-BuildArch:      noarch
-
-%description    -n boost-license
-This package contains the license boost is provided under.
+Runtime component Boost.Thread library, which provides classes and
+functions for managing multiple threads of execution, and for
+synchronizing data between the threads or providing separate copies of
+data specific to individual threads.
 
 
-%package        -n libboost_date_time
-Summary:        Boost::Date.Time Runtime libraries
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-datetime
+%package system
+Summary:  Runtime component of boost system library
+Group: System/Libraries
+Provides: libboost_system.so.%{version}
 
-%description -n libboost_date_time
-This package contains the Boost Date.Time runtime libraries.
+%description system
 
+Runtime component Boost. System library, which provides simple, light-weight
+error_code objects that encapsulate system-specific error code values,
+yet also provide access to more abstract and portable error conditions via
+error_condition objects.
 
-%package     -n libboost_filesystem
-Summary:        Boost::Filesystem Runtime Libraries
-Group:          System/Localization
-Requires:       boost-license
-Provides:       boost-filesystem
+%package filesystem
+Summary:  Runtime component of boost filesystem library
+Group: System/Libraries
+Provides: libboost_filesystem.so.%{version}
 
-%description    -n libboost_filesystem
-This package contains the Boost::Filesystem libraries.
+%description filesystem
 
-
-%package        -n libboost_graph
-Summary:        Boost::Graph Runtime Libraries
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-graph
-
-%description    -n libboost_graph
-This package contains the Boost::Graph Runtime libraries.
+Runtime component Boost. FileSystem library, which provides facilities
+to manipulate files and directories, and the paths that identify them.
 
 
-%package        -n libboost_iostreams
-Summary:        Boost::IOStreams Runtime Libraries
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-iostreams
+%package devel
+Summary: The Boost C++ headers and shared development libraries
+Group: Development/Libraries
+Requires: boost = %{version}-%{release}
+Requires: boost-program-options = %{version}-%{release}
+Requires: boost-thread = %{version}-%{release}
+Provides: boost-system = %{version}-%{release}
+Provides: boost-filesystem = %{version}-%{release}
+Provides: boost-devel = %{version}-%{release}
 
-%description    -n libboost_iostreams
-This package contains the Boost::IOStreams Runtime libraries.
+%description devel
+Headers and shared object symlinks for the Boost C++ libraries.
 
+%package static
+Summary: The Boost C++ static development libraries
+Group: Development/Libraries
+Requires: boost-devel = %{version}-%{release}
+Obsoletes: boost-devel-static < 1.34.1-14
+Provides: boost-devel-static = %{version}-%{release}
 
-%package        -n libboost_math
-Summary:        Boost::Math Runtime Libraries
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-math
+%description static
+Static Boost C++ libraries.
 
-%description    -n libboost_math
-This package contains the Boost::Math Runtime libraries.
+%package test
+Summary:  Runtime component of boost program_options library
+Group: System/Libraries
+Provides: libboost_test.so.%{version}
 
+%description test
 
+Boost Test
 
-%package        -n libboost_test
-Summary:        Boost::Test Runtime Libraries
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-test
+%package doc
+Summary: The Boost C++ html docs
+Group: Documentation
+Provides: boost-python-docs = %{version}-%{release}
 
-%description    -n libboost_test
-This package contains the Boost::Test runtime libraries.
-
-
-%package        -n libboost_program_options
-Summary:        Boost::ProgramOptions Runtime libraries
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-program-options
-
-%description    -n libboost_program_options
-This package contains the Boost::ProgramOptions Runtime libraries.
-
-
-%package        -n libboost_python
-Summary:        Boost::Python Runtime Libraries
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-python
-
-%description    -n libboost_python
-This package contains the Boost::Python Runtime libraries.
-
-
-%package        -n libboost_serialization
-Summary:        Boost::Serialization Runtime Libraries
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-serialization
-
-%description    -n libboost_serialization
-This package contains the Boost::Serialization Runtime libraries.
-
-
-%package        -n libboost_signals
-Summary:        Boost::Signals Runtime Libraries
-Group:          System/Libraries
-Requires:       boost-license
-
-%description    -n libboost_signals
-This package contains the Boost::Signals Runtime libraries.
-
-
-%package        -n libboost_system
-Summary:        Boost::System Runtime Libraries
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-system
-
-%description    -n libboost_system
-This package contains the Boost::System runtime libraries.
-
-
-%package        -n libboost_thread
-Summary:        Boost::Thread Runtime Libraries
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-thread
-
-%description    -n libboost_thread
-This package contains the Boost::Thread runtime libraries.
-
-
-%package        -n libboost_wave
-Summary:        Boost::Wave Runtime Libraries
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-wave
-
-%description    -n libboost_wave
-This package contains the Boost::Wave runtime libraries.
-
-
-%package        -n libboost_regex
-Summary:        The Boost::Regex runtime library
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-regex
-
-%description    -n libboost_regex
-This package contains the Boost::Regex runtime library.
-
-%package        -n libboost_random
-Summary:        The Boost::Random runtime library
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-random
-
-%description    -n libboost_random
-This package contains the Boost::Random runtime library.
-
-%package        -n libboost_chrono
-Summary:        The Boost::Chrono runtime library
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-chrono
-
-%description    -n libboost_chrono
-This package contains the Boost::Chrono runtime library.
-
-%package        -n libboost_locale
-Summary:        The Boost::Locale runtime library
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-locale
-
-%description    -n libboost_locale
-This package contains the Boost::Locale runtime library.
-
-%package        -n libboost_timer
-Summary:        The Boost::Timer runtime library
-Group:          System/Libraries
-Requires:       boost-license
-Provides:       boost-timer
-
-%description    -n libboost_timer
-This package contains the Boost::Timer runtime library.
-
+%description doc
+HTML documentation files for Boost C++ libraries.
 
 %prep
-%setup -q -n %{name}_%{file_version} 
-cp %{SOURCE1001} .
-#everything in the tarball has the executable flag set ...
-find -type f ! \( -name \*.sh -o -name \*.py -o -name \*.pl \) -exec chmod -x {} +
+%setup -q
+#%setup -q -n %{name}_1_51_0
 
-#stupid build machinery copies .orig files
-find . -name \*.orig -exec rm {} +
+#%patch0 -p0
+#sed 's/_FEDORA_OPT_FLAGS/%{optflags}/' %{PATCH1} | %{__patch} -p0 --fuzz=0
+#%patch2 -p0
+#sed 's/_FEDORA_SONAME/%{sonamever}/' %{PATCH3} | %{__patch} -p0 --fuzz=0
+#%patch4 -p0
+#%patch5 -p0
+#%patch6 -p0
+#%patch7 -p0
 
 %build
-find . -type f -exec chmod u+w {} +
+BOOST_ROOT=`pwd`
+export BOOST_ROOT
 
-# Now build it
-J_P=%{jobs}
-J_G=$(getconf _NPROCESSORS_ONLN)
-[ $J_G -gt 64 ] && J_G=64
+BOOST_LIBS="program_options,thread,system,filesystem,test"
 
-if test -z "$JOBS"; then
-  JOBS=$J_G
-else
-  test 1 -gt "$JOBS" && JOBS=1
-fi
-if test "$JOBS" == "0"; then
-  JOBS=1
-fi
+# build make tools, ie bjam, necessary for building libs, docs, and testing
+#(cd tools/jam/src && ./build.sh)
+./bootstrap.sh --with-libraries=$BOOST_LIBS
+BJAM=`find . -name bjam -a -type f`
+./bjam
 
-# In case you want more parallel jobs then autobuild grants you
-#if [ $J_P -gt $J_I ]; then
-#  JOBS=$J_G
+#CONFIGURE_FLAGS="--with-toolset=gcc"
+#PYTHON_VERSION=$(python -c 'import sys; print sys.version[:3]')
+#PYTHON_FLAGS="--with-python-root=/usr --with-python-version=$PYTHON_VERSION"
+#REGEX_FLAGS="--with-icu"
+#./bootstrap.sh $CONFIGURE_FLAGS $PYTHON_FLAGS $REGEX_FLAGS
+
+#%ifarch %{arm}
+#LONGDOUBLE="--disable-long-double"
+#%else
+#LONGDOUBLE=""
+#%endif
+
+#BUILD_VARIANTS="variant=release threading=single,multi debug-symbols=on"
+#BUILD_FLAGS="-d2 --layout=system $BUILD_VARIANTS $LONGDOUBLE"
+#$BJAM $BUILD_FLAGS %{?_smp_mflags} stage
+
+# build docs, requires a network connection for docbook XSLT stylesheets
+#%if %{with docs_generated}
+#cd ./doc
+#chmod +x ../tools/boostbook/setup_boostbook.sh
+#../tools/boostbook/setup_boostbook.sh
+#USER_CFG=$BOOST_ROOT/tools/build/v2/user-config.jam
+#$BOOST_ROOT/$BJAM --v2 -sICU_PATH=/usr --user-config=$USER_CFG html
+#cd ..
+#%endif
+#
+#%check
+#%if %{with tests}
+#echo "<p>" `uname -a` "</p>" > status/regression_comment.html
+#echo "" >> status/regression_comment.html
+#echo "<p>" `g++ --version` "</p>" >> status/regression_comment.html
+#echo "" >> status/regression_comment.html
+#
+#cd tools/regression/build
+##$BOOST_ROOT/$BJAM
+#cd ../test
+##python ./test.py
+#cd ../../..
+#
+#results1=status/cs-`uname`.html
+#results2=status/cs-`uname`-links.html
+#email=benjamin.kosnik@gmail.com
+#if [ -f $results1 ] && [ -f $results2 ]; then
+#  echo "sending results starting"
+#  testdate=`date +%Y%m%d`
+#  testarch=`uname -m`
+#  results=boost-results-$testdate-$testarch.tar.bz2
+#  tar -cvf boost-results-$testdate-$testarch.tar $results1 $results2
+#  bzip2 -f boost-results-$testdate-$testarch.tar
+#  echo | mutt -s "$testdate boost regression $testarch" -a $results $email
+#  echo "sending results finished"
+#else
+#  echo "error sending results"
 #fi
-%if %{disable_long_double}
-export LONG_DOUBLE_FLAGS="--disable-long-double"
-%endif
-BJAM_CONFIG="-d2 -j$JOBS -sICU_PATH=%{_prefix}"
-PYTHON_VERSION=$(python -c 'import sys; print sys.version[:3]')
-PYTHON_FLAGS="--with-python-root=/usr --with-python-version=$PYTHON_VERSION"
-REGEX_FLAGS="--with-icu"
-export EXPAT_INCLUDE=/usr/include EXPAT_LIBPATH=%{_libdir} REGEX_FLAGS="--with-icu"
-export PYTHON_FLAGS
-
-cat << EOF >user-config.jam
-# Boost.Build Configuration
-
-# Compiler configuration
-using gcc ;
-
-# Python configuration
-using python : ${PYTHON_VERSION} : %{_prefix} ;
-EOF
-
-
-
-sh ./bootstrap.sh
-./b2
-
+#%endif
 
 %install
-# Now build it
-J_P=%{jobs}
-J_G=$(getconf _NPROCESSORS_ONLN)
-[ $J_G -gt 64 ] && J_G=64
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT%{_libdir}
+mkdir -p $RPM_BUILD_ROOT%{_includedir}
+mkdir -p $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
 
-if test -z "$JOBS"; then
-  JOBS=$J_G
-else
-  test 1 -gt "$JOBS" && JOBS=1
-fi
-if test "$JOBS" == "0"; then
-  JOBS=1
-fi
+mkdir -p %{buildroot}/%{_datadir}/license
+cp -rf %{_builddir}/%{name}-%{version}/packaging/%{name} %{buildroot}/%{_datadir}/license
 
-# In case you want more parallel jobs then autobuild grants you
-if [ $J_P -gt $J_G ]; then
-  JOBS=$J_G
-fi
+# install lib
+for i in `find stage -type f -name \*.a`; do
+  NAME=`basename $i`;
+  install -p -m 0644 $i $RPM_BUILD_ROOT%{_libdir}/$NAME;
+done;
+for i in `find stage \( -type f -o -type l \) -name \*.so*`; do
+  NAME=`basename $i`;
+  install -p -m 0644 $i $RPM_BUILD_ROOT%{_libdir}/$NAME;
+  strip $RPM_BUILD_ROOT%{_libdir}/$NAME;
+#  SONAME=$i.%{sonamever};
+#  VNAME=$i.%{version};
+#  base=`basename $i`;
+#  NAMEbase=$base;
+#  SONAMEbase=$base.%{sonamever};
+#  VNAMEbase=$base.%{version};
+#  mv $i $VNAME;
+#
+#  # remove rpath
+#  chrpath --delete $VNAME;
+#
+#  ln -s $VNAMEbase $SONAME;
+#  ln -s $VNAMEbase $NAME;
+#  install -p -m 755 $VNAME $RPM_BUILD_ROOT%{_libdir}/$VNAMEbase;
+#
+#  mv $SONAME $RPM_BUILD_ROOT%{_libdir}/$SONAMEbase;
+#  mv $NAME $RPM_BUILD_ROOT%{_libdir}/$NAMEbase;
+done;
 
-BJAM_CONFIG="-d2 -j$JOBS -sICU_PATH=%{_prefix}"
-PYTHON_VERSION=$(python -c 'import sys; print sys.version[:3]')
-PYTHON_FLAGS="--with-python-root=/usr --with-python-version=$PYTHON_VERSION"
-REGEX_FLAGS="--with-icu"
-export EXPAT_INCLUDE=/usr/include EXPAT_LIBPATH=%{_libdir} REGEX_FLAGS="--with-icu"
-export PYTHON_FLAGS
-
-# Set PATH, MANPATH and LD_LIBRARY_PATH
-
-%{_bindir}/bjam ${BJAM_CONFIG} ${LONG_DOUBLE_FLAGS} --user-config=user-config.jam \
-	--prefix=%{buildroot}%{_prefix} \
-	--exec-prefix=$%{buildroot}%{_prefix} \
-	--libdir=%{buildroot}%{_libdir} \
-	--includedir=%{buildroot}%{_includedir} \
-	install || echo "Not all Boost libraries built properly."
-
-mkdir -p %{buildroot}%{_docdir}
-
-pushd %{buildroot}%{_libdir}
-blibs=$(find . -name \*.so.%{version})
-echo $blibs | xargs chrpath -d 
-
-for lib in ${blibs}; do
-  BASE=$(basename ${lib} .so.%{version})
-  SONAME_MT="$BASE-mt.so"
-  ln -sf ${lib} $SONAME_MT
-done
-popd
-
-#install the man pages
-rm -rf doc/man/man3/boost::units::operator
-
-for sec in 3 7 9; do
-    install -d %buildroot/%{_mandir}/man${sec}
+# install include files
+find %{name} -type d | while read a; do
+  mkdir -p $RPM_BUILD_ROOT%{_includedir}/$a
+  find $a -mindepth 1 -maxdepth 1 -type f \
+  | xargs -r install -m 644 -p -t $RPM_BUILD_ROOT%{_includedir}/$a
 done
 
-#install doc files
-dos2unix libs/ptr_container/doc/tutorial_example.html \
-	libs/parameter/doc/html/reference.html \
-	libs/parameter/doc/html/index.html \
-	libs/iostreams/doc/tree/tree.js \
-	libs/graph/doc/lengauer_tarjan_dominator.htm \
-	libs/test/test/test_files/errors_handling_test.pattern \
-	libs/test/test/test_files/result_report_test.pattern
-find . -name \*.htm\* -o -name \*.gif -o -name \*.css -o -name \*.jpg -o -name \*.png -o -name \*.ico | \
-	tar --files-from=%{S:4} -cf - --files-from=- | tar -C %{buildroot}%{_docdir} -xf -
-rm -rf %{buildroot}%{_docdir}/boost
-ln -s /usr/include/boost %{buildroot}%{_docdir}
-ln -s ../LICENSE_1_0.txt %{buildroot}%{_docdir}/libs
-#Copy the news file.
-#cp %%{S:5} %%{buildroot}%%{_docdir}
-#only for documentation, doesn't need to be executable
-find %{buildroot}%{_docdir} -name \*.py -exec chmod -x {} +
-rm -f %{buildroot}%{_libdir}/*.a
-#symlink dupes
-%fdupes %buildroot
+# install doc files
+DOCPATH=$RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/
+find libs doc more -type f \( -name \*.htm -o -name \*.html \) \
+    | sed -n '/\//{s,/[^/]*$,,;p}' \
+    | sort -u > tmp-doc-directories
+sed "s:^:$DOCPATH:" tmp-doc-directories | xargs -r mkdir -p
+cat tmp-doc-directories | while read a; do
+    find $a -mindepth 1 -maxdepth 1 -name \*.htm\* \
+    | xargs install -m 644 -p -t $DOCPATH$a
+done
+rm tmp-doc-directories
+install -p -m 644 -t $DOCPATH LICENSE_1_0.txt index.htm
 
-%remove_docs
+# remove scripts used to generate include files
+find $RPM_BUILD_ROOT%{_includedir}/ \( -name '*.pl' -o -name '*.sh' \) -exec rm {} \;
 
+%clean
+rm -rf $RPM_BUILD_ROOT
 
-%post -n libboost_date_time -p /sbin/ldconfig
-%post -n libboost_filesystem -p /sbin/ldconfig
-%post -n libboost_iostreams -p /sbin/ldconfig
-%post -n libboost_test -p /sbin/ldconfig
-%post -n libboost_program_options -p /sbin/ldconfig
-%post -n libboost_python -p /sbin/ldconfig
-%post -n libboost_regex -p /sbin/ldconfig
-%post -n libboost_serialization -p /sbin/ldconfig
-%post -n libboost_signals -p /sbin/ldconfig
-%post -n libboost_thread -p /sbin/ldconfig
-%post -n libboost_math -p /sbin/ldconfig 
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
 
 
-%post -n libboost_graph -p /sbin/ldconfig
-%post -n libboost_system -p /sbin/ldconfig
-%post -n libboost_wave -p /sbin/ldconfig
-%post -n libboost_random -p /sbin/ldconfig
-%post -n libboost_chrono -p /sbin/ldconfig
-%post -n libboost_locale -p /sbin/ldconfig
-%post -n libboost_timer -p /sbin/ldconfig
+%post chrono -p /sbin/ldconfig
+%postun chrono -p /sbin/ldconfig
+%post program-options -p /sbin/ldconfig
 
-%postun -n libboost_date_time -p /sbin/ldconfig
-%postun -n libboost_filesystem -p /sbin/ldconfig
-%postun -n libboost_iostreams -p /sbin/ldconfig
-%postun -n libboost_test -p /sbin/ldconfig
-%postun -n libboost_program_options -p /sbin/ldconfig
-%postun -n libboost_python -p /sbin/ldconfig
-%postun -n libboost_regex -p /sbin/ldconfig
-%postun -n libboost_serialization -p /sbin/ldconfig
-%postun -n libboost_signals -p /sbin/ldconfig
-%postun -n libboost_thread -p /sbin/ldconfig
-%postun -n libboost_math -p /sbin/ldconfig
+%postun program-options -p /sbin/ldconfig
 
 
-%postun -n libboost_graph -p /sbin/ldconfig
-%postun -n libboost_system -p /sbin/ldconfig
-%postun -n libboost_wave -p /sbin/ldconfig
-%postun -n libboost_random -p /sbin/ldconfig
-%postun -n libboost_chrono -p /sbin/ldconfig
-%postun -n libboost_locale -p /sbin/ldconfig
-%postun -n libboost_timer -p /sbin/ldconfig
+%post thread -p /sbin/ldconfig
 
-%files -n boost-license
-%manifest %{name}.manifest
+%postun thread -p /sbin/ldconfig
+
+
+%post system -p /sbin/ldconfig
+
+%postun system -p /sbin/ldconfig
+
+
+%post filesystem -p /sbin/ldconfig
+
+%postun filesystem -p /sbin/ldconfig
+
+
+%post doc -p /sbin/ldconfig
+
+%postun doc -p /sbin/ldconfig
+
+
+%post devel -p /sbin/ldconfig
+
+%postun devel -p /sbin/ldconfig
+
+
+%post static -p /sbin/ldconfig
+
+%postun static -p /sbin/ldconfig
+
+
+%post test -p /sbin/ldconfig
+
+%postun test -p /sbin/ldconfig
+
+
+%files
+%manifest boost.manifest
+%{_datadir}/license/%{name}
+%files chrono
+%manifest boost.manifest
 %defattr(-, root, root, -)
-##%doc %{_docdir}/LICENSE_1_0.txt
+%{_libdir}/libboost_chrono*.so.%{version}
 
-%files -n libboost_date_time
-%manifest %{name}.manifest
+%files program-options
+%manifest boost.manifest
 %defattr(-, root, root, -)
-%{_libdir}/libboost_date_time*.so.*
+%{_libdir}/libboost_program_options*.so.%{version}
 
-%files -n libboost_filesystem
-%manifest %{name}.manifest
+%files thread
+%manifest boost.manifest
 %defattr(-, root, root, -)
-%{_libdir}/libboost_filesystem*.so.*
+%{_libdir}/libboost_thread*.so.%{version}
 
-%files -n libboost_graph
-%manifest %{name}.manifest
+%files system
+%manifest boost.manifest
 %defattr(-, root, root, -)
-%{_libdir}/libboost_graph*.so.*
+%{_libdir}/libboost_system*.so.%{version}
 
-%files -n libboost_iostreams
-%manifest %{name}.manifest
+%files filesystem
+%manifest boost.manifest
 %defattr(-, root, root, -)
-%{_libdir}/libboost_iostreams*.so.*
+%{_libdir}/libboost_filesystem*.so.%{version}
 
-%files -n libboost_math
-%manifest %{name}.manifest
+%files doc
+%manifest boost.manifest
 %defattr(-, root, root, -)
-%{_libdir}/libboost_math_*.so.*
-
-
-%files -n libboost_test
-%manifest %{name}.manifest
-%defattr(-, root, root, -)
-%{_libdir}/libboost_prg_exec_monitor*.so.*
-%{_libdir}/libboost_unit_test_framework*.so.*
-
-%files -n libboost_program_options
-%manifest %{name}.manifest
-%defattr(-, root, root, -)
-%{_libdir}/libboost_program_options*.so.*
-
-%files -n libboost_python
-%manifest %{name}.manifest
-%defattr(-, root, root, -)
-%{_libdir}/libboost_python*.so.*
-
-%files -n libboost_serialization
-%manifest %{name}.manifest
-%defattr(-, root, root, -)
-%{_libdir}/libboost_*serialization*.so.*
-
-%files -n libboost_signals
-%manifest %{name}.manifest
-%defattr(-, root, root, -)
-%{_libdir}/libboost_signals*.so.*
-
-%files -n libboost_system
-%manifest %{name}.manifest
-%defattr(-, root, root, -)
-%{_libdir}/libboost_system*.so.*
-
-%files -n libboost_thread
-%manifest %{name}.manifest
-%defattr(-, root, root, -)
-%{_libdir}/libboost_thread*.so.*
-
-%files -n libboost_wave
-%manifest %{name}.manifest
-%defattr(-, root, root, -)
-%{_libdir}/libboost_wave*.so.*
-
-%files -n libboost_regex
-%manifest %{name}.manifest
-%defattr(-, root, root, -)
-%{_libdir}/libboost_regex*.so.*
-
-%files -n libboost_random
-%manifest %{name}.manifest
-%defattr(-, root, root, -)
-%{_libdir}/libboost_random*.so.*
-
-%files -n libboost_chrono
-%manifest %{name}.manifest
-%defattr(-, root, root, -)
-%{_libdir}/libboost_chrono*.so.*
-
-%files -n libboost_locale
-%manifest %{name}.manifest
-%defattr(-, root, root, -)
-%{_libdir}/libboost_locale*.so.*
-
-%files -n libboost_timer
-%manifest %{name}.manifest
-%defattr(-, root, root, -)
-%{_libdir}/libboost_timer*.so.*
+%doc %{_docdir}/%{name}-%{version}
 
 %files devel
-%manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_includedir}/boost
 %{_libdir}/*.so
 
+%files static
+%manifest boost.manifest
+%defattr(-, root, root, -)
+%{_libdir}/*.a
 
-%changelog
+%files test
+%manifest boost.manifest
+%defattr(-, root, root, -)
+%{_libdir}/libboost_unit_test_framework*.so.%{version}
+%{_libdir}/libboost_prg_exec_monitor*.so.%{version}

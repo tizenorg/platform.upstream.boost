@@ -74,7 +74,7 @@ namespace
 
   unsigned short language_id;  // 0 except for Windows
 
-  const char * temp_dir_name = "v2_operations_test";
+  const char * temp_dir_name = "temp_fs_test_dir";
 
   void create_file( const fs::path & ph, const std::string & contents )
   {

@@ -12,11 +12,8 @@
 
 #include <initializer_list>
 #include <vector>
-#include <string>
 
 namespace boost_no_initializer_lists {
-
-void quiet_warning(const std::initializer_list<int>&){}
 
 void f(std::initializer_list<int>)
 {
@@ -27,7 +24,6 @@ int test()
     std::vector<std::string> v{"once", "upon", "a", "time"}; // See C++ std 8.5.4
     f( { 1, 2, 3, 4 } );
     std::initializer_list<int> x = { 1, 2 };
-    quiet_warning(x);
     return 0;
 }
 

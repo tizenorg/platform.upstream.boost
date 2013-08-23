@@ -1846,7 +1846,7 @@ routine, e.g.,
 
 `skeleton_proxy` objects can be received on the other end via `recv()`,
 which stores a newly-created instance of your data structure with the
-same "shape" as the sender in its `object` attribute:
+same "shape" as the sender in its `"object` attribute:
 
   shape = mpi.world.recv(0, 0)
   my_data_structure = shape.object

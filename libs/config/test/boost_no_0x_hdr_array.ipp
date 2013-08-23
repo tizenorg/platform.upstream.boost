@@ -16,8 +16,7 @@ namespace boost_no_0x_hdr_array {
 
 int test()
 {
-  std::array<int, 3> a = { 1, 2, 3 };
-  return a.size() == 3 ? 0 : 1;
+  return 0;
 }
 
 }

@@ -29,7 +29,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/io/detail/quoted_manip.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/functional/hash_fwd.hpp>
 #include <string>
 #include <iterator>
 #include <cstring>
@@ -96,7 +95,7 @@ namespace filesystem3
     //  TODO: rules needed for operating systems that use / or .
     //  differently, or format directory paths differently from file paths. 
     //
-    //  **********************************************************************************
+    //  ************************************************************************
     //
     //  More work needed: How to handle an operating system that may have
     //  slash characters or dot characters in valid filenames, either because
@@ -108,7 +107,7 @@ namespace filesystem3
     //                                             ^^^^
     //  Note that 0x2F is the ASCII slash character
     //
-    //  **********************************************************************************
+    //  ************************************************************************
 
     //  Supported source arguments: half-open iterator range, container, c-array,
     //  and single pointer to null terminated string.
@@ -117,16 +116,16 @@ namespace filesystem3
     //  multi-byte character strings which may have embedded nulls. Embedded null
     //  support is required for some Asian languages on Windows.
 
-    //  [defaults] "const codecvt_type& cvt=codecvt()" default arguments are not used
-    //  because some compilers, such as Microsoft prior to VC++ 10, do not handle defaults
-    //  correctly in templates.
+    //  "const codecvt_type& cvt=codecvt()" default arguments are not used because some
+    //  compilers, such as Microsoft prior to VC++ 10, do not handle defaults correctly
+    //  in templates.
 
     //  -----  constructors  -----
 
     path(){}                                          
 
     path(const path& p) : m_pathname(p.m_pathname) {}
-
+ 
     template <class Source>
     path(Source const& source,
       typename boost::enable_if<path_traits::is_pathable<
@@ -135,20 +134,9 @@ namespace filesystem3
       path_traits::dispatch(source, m_pathname, codecvt());
     }
 
-    //  Overloads for the operating system API's native character type. Rationale:
-    //    - Avoids use of codecvt() for native value_type strings. This limits the
-    //      impact of locale("") initialization failures on POSIX systems to programs
-    //      that actually depend on locale(""). It further ensures that exceptions thrown
-    //      as a result of such failues occur after main() has started, so can be caught.
-    //      This is a partial resolution of tickets 4688, 5100, and 5289.
-    //    - A slight optimization for a common use case, particularly on POSIX since
-    //      value_type is char and that is the most common useage.
-    path(const value_type* s) : m_pathname(s) {}
-    path(const std::basic_string<value_type>& s) : m_pathname(s) {}
-
     template <class Source>
     path(Source const& source, const codecvt_type& cvt)
-    //  see [defaults] note above explaining why codecvt() default arguments are not used
+    //  see note above explaining why codecvt() default arguments are not used
     {
       path_traits::dispatch(source, m_pathname, cvt);
     }
@@ -183,12 +171,6 @@ namespace filesystem3
       return *this;
     }
 
-    path& operator=(const value_type* ptr)  // required in case ptr overlaps *this
-    {
-      m_pathname = ptr;
-      return *this;
-    }
-
     template <class Source>
       typename boost::enable_if<path_traits::is_pathable<
         typename boost::decay<Source>::type>, path&>::type
@@ -196,12 +178,6 @@ namespace filesystem3
     {
       m_pathname.clear();
       path_traits::dispatch(source, m_pathname, codecvt());
-      return *this;
-    }
-
-    path& assign(const value_type* ptr, const codecvt_type&)  // required in case ptr overlaps *this
-    {
-      m_pathname = ptr;
       return *this;
     }
 
@@ -239,20 +215,12 @@ namespace filesystem3
 
     path& operator/=(const path& p);
 
-    path& operator/=(const value_type* ptr);
-
     template <class Source>
       typename boost::enable_if<path_traits::is_pathable<
         typename boost::decay<Source>::type>, path&>::type
     operator/=(Source const& source)
     {
       return append(source, codecvt());
-    }
-
-    path& append(const value_type* ptr, const codecvt_type&)  // required in case ptr overlaps *this
-    {
-      this->operator/=(ptr);
-      return *this;
     }
 
     template <class Source>
@@ -398,16 +366,6 @@ namespace filesystem3
     }
     bool is_relative() const         { return !is_absolute(); } 
 
-    //  -----  iterators  -----
-
-    class iterator;
-    typedef iterator const_iterator;
-
-    iterator begin() const;
-    iterator end() const;
-
-    //  -----  static members  -----
-
     //  -----  imbue  -----
 
     static std::locale imbue(const std::locale& loc);
@@ -418,6 +376,14 @@ namespace filesystem3
     {
       return *wchar_t_codecvt_facet();
     }
+
+    //  -----  iterators  -----
+
+    class iterator;
+    typedef iterator const_iterator;
+
+    iterator begin() const;
+    iterator end() const;
 
     //  -----  deprecated functions  -----
 
@@ -582,31 +548,18 @@ namespace filesystem3
     const path::value_type* l(lhs.c_str());
     while ((*l == *rhs || (*l == L'\\' && *rhs == L'/') || (*l == L'/' && *rhs == L'\\'))
       && *l) { ++l; ++rhs; }
-    return *l == *rhs;
+    return *l == *rhs || (*l == L'\\' && *rhs == L'/') || (*l == L'/' && *rhs == L'\\');  
   }
   inline bool operator==(const path& lhs, const path& rhs)              { return lhs == rhs.c_str(); }
   inline bool operator==(const path& lhs, const path::string_type& rhs) { return lhs == rhs.c_str(); }
   inline bool operator==(const path::string_type& lhs, const path& rhs) { return rhs == lhs.c_str(); }
   inline bool operator==(const path::value_type* lhs, const path& rhs)  { return rhs == lhs; }
-
-  inline std::size_t hash_value(const path& x)
-  {
-    std::size_t seed = 0;
-    for(const path::value_type* it = x.c_str(); *it; ++it)
-      hash_combine(seed, *it == '/' ? L'\\' : *it);
-    return seed;
-  }
 # else   // BOOST_POSIX_API
   inline bool operator==(const path& lhs, const path& rhs)              { return lhs.native() == rhs.native(); }
   inline bool operator==(const path& lhs, const path::string_type& rhs) { return lhs.native() == rhs; }
   inline bool operator==(const path& lhs, const path::value_type* rhs)  { return lhs.native() == rhs; }
   inline bool operator==(const path::string_type& lhs, const path& rhs) { return lhs == rhs.native(); }
   inline bool operator==(const path::value_type* lhs, const path& rhs)  { return lhs == rhs.native(); }
-
-  inline std::size_t hash_value(const path& x)
-  {
-    return hash_range(x.native().begin(), x.native().end());
-  }
 # endif
 
   inline bool operator!=(const path& lhs, const path& rhs)              { return !(lhs == rhs); }
@@ -628,7 +581,7 @@ namespace filesystem3
   operator<<(std::basic_ostream<Char, Traits>& os, const path& p)
   {
     return os
-      << boost::io::quoted(p.template string<std::basic_string<Char> >(), static_cast<Char>('&'));
+      << boost::io::quoted(p.string<std::basic_string<Char> >(), static_cast<Char>('&'));
   }
   
   template <class Char, class Traits>
@@ -672,14 +625,14 @@ namespace filesystem3
   }
 
   template <class Source>
-  path& path::append(Source const& source, const codecvt_type& cvt)
+  path& path::append(Source const & source, const codecvt_type& cvt)
   {
     if (path_traits::empty(source))
       return *this;
-      string_type::size_type sep_pos(m_append_separator_if_needed());
-      path_traits::dispatch(source, m_pathname, cvt);
-      if (sep_pos)
-        m_erase_redundant_separator(sep_pos);
+    string_type::size_type sep_pos(m_append_separator_if_needed());
+    path_traits::dispatch(source, m_pathname, cvt);
+    if (sep_pos)
+      m_erase_redundant_separator(sep_pos);
     return *this;
   }
 

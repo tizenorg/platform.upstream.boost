@@ -14,13 +14,8 @@
 
 namespace boost_no_0x_hdr_initializer_list {
 
-void foo(const std::initializer_list<const char*>& l)
-{
-}
-
 int test()
 {
-  foo( { "a", "b", "c" } );
   return 0;
 }
 

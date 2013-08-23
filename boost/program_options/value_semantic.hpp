@@ -227,6 +227,13 @@ namespace boost { namespace program_options {
             return this;
         }
 
+        /** Specifies the name used to to the value in help message.  */
+        typed_value* value_name(const std::string& name)
+        {
+            m_value_name = name;
+            return this;
+        }
+
         /** Specifies an implicit value, which will be used
             if the option is given, but without an adjacent value.
             Using this implies that an explicit value is optional, but if
@@ -261,13 +268,21 @@ namespace boost { namespace program_options {
             return this;
         }
 
-        /** Specifies that the value can span multiple tokens. */
+        /** Specifies that the value can span multiple tokens. 
+        */
         typed_value* multitoken()
         {
             m_multitoken = true;
             return this;
         }
 
+        /** Specifies that no tokens may be provided as the value of
+            this option, which means that only presense of the option
+            is significant. For such option to be useful, either the
+            'validate' function should be specialized, or the 
+            'implicit_value' method should be also used. In most
+            cases, you can use the 'bool_switch' function instead of
+            using this method. */
         typed_value* zero_tokens() 
         {
             m_zero_tokens = true;
@@ -346,6 +361,7 @@ namespace boost { namespace program_options {
         
         // Default value is stored as boost::any and not
         // as boost::optional to avoid unnecessary instantiations.
+        std::string m_value_name;
         boost::any m_default_value;
         std::string m_default_value_as_text;
         boost::any m_implicit_value;
@@ -385,7 +401,7 @@ namespace boost { namespace program_options {
     typed_value<T, wchar_t>*
     wvalue(T* v);
 
-    /** Works the same way as the 'value&lt;bool&gt;' function, but the created
+    /** Works the same way as the 'value<bool>' function, but the created
         value_semantic won't accept any explicit value. So, if the option 
         is present on the command line, the value will be 'true'.
     */
