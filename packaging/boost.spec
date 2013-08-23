@@ -1,6 +1,6 @@
-%define ver 1.49.0
-%define file_version 1_49_0
-%define short_version 1_49
+%define ver 1.53.0
+%define file_version 1_53.0
+%define short_version 1_53
 
 #Define to 0 to not generate the pdf documentation
 %define build_pdf 0
@@ -38,7 +38,7 @@ Url:            http://www.boost.org
 Summary:        Boost C++ Libraries
 License:        BSD-3-Clause
 Group:          Development/Libraries/C and C++
-Version:        1.49.0
+Version:        1.53.0
 Release:        0
 Source0:        %{name}_%{file_version}.tar.bz2
 Source1:        boost-rpmlintrc
@@ -123,6 +123,25 @@ Provides:       boost-graph
 
 %description    -n libboost_graph
 This package contains the Boost::Graph Runtime libraries.
+
+%package        -n libboost_context
+Summary:        Run-Time component of boost context switching library
+Group:          System/Libraries
+Requires:       boost-license
+
+%description -n libboost_context
+Run-Time support for Boost.Context, a foundational library that
+provides a sort of cooperative multitasking on a single thread.
+
+%package        -n libboost_atomic
+Summary:        Run-Time component of boost atomic library
+Group:          System/Libraries
+Requires:       boost-license
+
+%description -n libboost_atomic
+Run-Time support for Boost.Atomic, a library that provides atomic data types
+and operations on these data types, as well as memory ordering constraints
+required for coordinating multiple threads through atomic variables.
 
 
 %package        -n libboost_iostreams
@@ -408,6 +427,7 @@ rm -f %{buildroot}%{_libdir}/*.a
 
 
 %post -n libboost_date_time -p /sbin/ldconfig
+%post -n libboost_atomic -p /sbin/ldconfig
 %post -n libboost_filesystem -p /sbin/ldconfig
 %post -n libboost_iostreams -p /sbin/ldconfig
 %post -n libboost_test -p /sbin/ldconfig
@@ -428,6 +448,7 @@ rm -f %{buildroot}%{_libdir}/*.a
 %post -n libboost_locale -p /sbin/ldconfig
 %post -n libboost_timer -p /sbin/ldconfig
 
+%postun -n libboost_atomic -p /sbin/ldconfig
 %postun -n libboost_date_time -p /sbin/ldconfig
 %postun -n libboost_filesystem -p /sbin/ldconfig
 %postun -n libboost_iostreams -p /sbin/ldconfig
@@ -552,5 +573,12 @@ rm -f %{buildroot}%{_libdir}/*.a
 %{_includedir}/boost
 %{_libdir}/*.so
 
+%files -n libboost_atomic
+%defattr(-, root, root, -)
+%{_libdir}/libboost_atomic*.so.*
+
+%files -n libboost_context
+%defattr(-, root, root, -)
+%{_libdir}/libboost_context*.so.*
 
 %changelog
