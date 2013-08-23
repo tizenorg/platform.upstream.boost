@@ -13,7 +13,8 @@
 
 #include <boost/container/detail/config_begin.hpp>
 #include <boost/container/detail/workaround.hpp>
-#include <boost/move/move.hpp>
+#include <boost/move/utility.hpp>
+#include <ostream>
 
 namespace boost {
 namespace container {
@@ -73,12 +74,18 @@ class movable_int
    int get_int() const
    {  return m_int;  }
 
+   friend bool operator==(const movable_int &l, int r)
+   {  return l.get_int() == r;   }
+
+   friend bool operator==(int l, const movable_int &r)
+   {  return l == r.get_int();   }
+
    private:
    int m_int;
 };
 
-template<class E, class T> 
-std::basic_ostream<E, T> & operator<< 
+template<class E, class T>
+std::basic_ostream<E, T> & operator<<
    (std::basic_ostream<E, T> & os, movable_int const & p)
 
 {
@@ -109,7 +116,7 @@ class movable_and_copyable_int
    movable_and_copyable_int(const movable_and_copyable_int& mmi)
       :  m_int(mmi.m_int)
    {}
-   
+  
    movable_and_copyable_int(BOOST_RV_REF(movable_and_copyable_int) mmi)
       :  m_int(mmi.m_int)
    {  mmi.m_int = 0; }
@@ -144,12 +151,18 @@ class movable_and_copyable_int
    int get_int() const
    {  return m_int;  }
 
+   friend bool operator==(const movable_and_copyable_int &l, int r)
+   {  return l.get_int() == r;   }
+
+   friend bool operator==(int l, const movable_and_copyable_int &r)
+   {  return l == r.get_int();   }
+
    private:
    int m_int;
 };
 
-template<class E, class T> 
-std::basic_ostream<E, T> & operator<< 
+template<class E, class T>
+std::basic_ostream<E, T> & operator<<
    (std::basic_ostream<E, T> & os, movable_and_copyable_int const & p)
 
 {
@@ -177,7 +190,7 @@ class copyable_int
    copyable_int(const copyable_int& mmi)
       :  m_int(mmi.m_int)
    {}
-   
+  
    copyable_int & operator= (int i)
    {  this->m_int = i;  return *this;  }
 
@@ -202,12 +215,18 @@ class copyable_int
    int get_int() const
    {  return m_int;  }
 
+   friend bool operator==(const copyable_int &l, int r)
+   {  return l.get_int() == r;   }
+
+   friend bool operator==(int l, const copyable_int &r)
+   {  return l == r.get_int();   }
+
    private:
    int m_int;
 };
 
-template<class E, class T> 
-std::basic_ostream<E, T> & operator<< 
+template<class E, class T>
+std::basic_ostream<E, T> & operator<<
    (std::basic_ostream<E, T> & os, copyable_int const & p)
 
 {
@@ -256,9 +275,16 @@ class non_copymovable_int
    int get_int() const
    {  return m_int;  }
 
+   friend bool operator==(const non_copymovable_int &l, int r)
+   {  return l.get_int() == r;   }
+
+   friend bool operator==(int l, const non_copymovable_int &r)
+   {  return l == r.get_int();   }
+
    private:
    int m_int;
 };
+
 
 }  //namespace test {
 }  //namespace container {

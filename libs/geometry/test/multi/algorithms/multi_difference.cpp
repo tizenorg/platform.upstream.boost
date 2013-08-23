@@ -10,8 +10,14 @@
 #include <iostream>
 #include <string>
 
-// #define BOOST_GEOMETRY_DEBUG_ASSEMBLE
+//#define HAVE_TTMATH
+//#define BOOST_GEOMETRY_DEBUG_ASSEMBLE
 //#define BOOST_GEOMETRY_CHECK_WITH_SQLSERVER
+
+//#define BOOST_GEOMETRY_DEBUG_SEGMENT_IDENTIFIER
+//#define BOOST_GEOMETRY_DEBUG_FOLLOW
+//#define BOOST_GEOMETRY_DEBUG_TRAVERSE
+
 
 #include <algorithms/test_difference.hpp>
 #include <algorithms/test_overlay.hpp>
@@ -33,7 +39,7 @@ void test_areal()
 {
     test_one<Polygon, MultiPolygon, MultiPolygon>("simplex_multi",
             case_multi_simplex[0], case_multi_simplex[1],
-            5, 12, 5.58, 4, 12, 2.58);
+            5, 21, 5.58, 4, 17, 2.58);
 
     test_one<Polygon, MultiPolygon, MultiPolygon>("case_multi_no_ip",
             case_multi_no_ip[0], case_multi_no_ip[1],
@@ -44,13 +50,13 @@ void test_areal()
 
     test_one<Polygon, MultiPolygon, Polygon>("simplex_multi_mp_p",
             case_multi_simplex[0], case_single_simplex,
-            5, 22, 5.58, 4, 17, 2.58);
+            5, 21, 5.58, 4, 17, 2.58);
     test_one<Polygon, Ring, MultiPolygon>("simplex_multi_r_mp",
             case_single_simplex, case_multi_simplex[0],
-            4, 17, 2.58, 5, 22, 5.58);
+            4, 17, 2.58, 5, 21, 5.58);
     test_one<Ring, MultiPolygon, Polygon>("simplex_multi_mp_r",
             case_multi_simplex[0], case_single_simplex,
-            5, 22, 5.58, 4, 17, 2.58);
+            5, 21, 5.58, 4, 17, 2.58);
 
     // Constructed cases for multi/touch/equal/etc
     test_one<Polygon, MultiPolygon, MultiPolygon>("case_61_multi",
@@ -64,7 +70,7 @@ void test_areal()
             0, 0, 0, 1, 5, 1);
     test_one<Polygon, MultiPolygon, MultiPolygon>("case_64_multi",
         case_64_multi[0], case_64_multi[1],
-            1, 1, 1, 1, 1, 1);
+            1, 5, 1, 1, 5, 1);
     test_one<Polygon, MultiPolygon, MultiPolygon>("case_65_multi",
         case_65_multi[0], case_65_multi[1],
             0, 0, 0, 2, 10, 3);
@@ -79,22 +85,22 @@ void test_areal()
 
     test_one<Polygon, MultiPolygon, MultiPolygon>("case_78_multi",
         case_78_multi[0], case_78_multi[1],
-            1, 1, 1.0, 1, 1, 1.0);
+            1, 5, 1.0, 1, 5, 1.0);
 
     // Ticket on GGL list 2011/10/25
     // to mix polygon/multipolygon in call to difference
     test_one<Polygon, Polygon, Polygon>("ggl_list_20111025_vd_pp",
         ggl_list_20111025_vd[0], ggl_list_20111025_vd[1],
-            1, -999, 8.0, 1, -999, 12.5);
+            1, 4, 8.0, 1, 4, 12.5);
     test_one<Polygon, Polygon, MultiPolygon>("ggl_list_20111025_vd_pm",
         ggl_list_20111025_vd[0], ggl_list_20111025_vd[3],
-            1, -999, 8.0, 1, -999, 12.5);
+            1, 4, 8.0, 1, 4, 12.5);
     test_one<Polygon, MultiPolygon, Polygon>("ggl_list_20111025_vd_mp",
         ggl_list_20111025_vd[2], ggl_list_20111025_vd[1],
-            1, -999, 8.0, 1, -999, 12.5);
+            1, 4, 8.0, 1, 4, 12.5);
     test_one<Polygon, MultiPolygon, MultiPolygon>("ggl_list_20111025_vd_mm",
         ggl_list_20111025_vd[2], ggl_list_20111025_vd[3],
-            1, -999, 8.0, 1, -999, 12.5);
+            1, 4, 8.0, 1, 4, 12.5);
 
     // Second case
     // This can be tested with this SQL for SQL-Server
@@ -115,7 +121,19 @@ void test_areal()
 
     test_one<Polygon, Polygon, MultiPolygon>("ggl_list_20111025_vd_2",
         ggl_list_20111025_vd_2[0], ggl_list_20111025_vd_2[1],
-            1, -999, 10.0, 2, -999, 6.0);
+            1, 7, 10.0, 2, 10, 6.0);
+
+    test_one<Polygon, MultiPolygon, MultiPolygon>("ggl_list_20120915_h2_a",
+        ggl_list_20120915_h2[0], ggl_list_20120915_h2[1],
+            2, 13, 17.0, 0, 0, 0.0);
+    test_one<Polygon, MultiPolygon, MultiPolygon>("ggl_list_20120915_h2_b",
+        ggl_list_20120915_h2[0], ggl_list_20120915_h2[2],
+            2, 13, 17.0, 0, 0, 0.0);
+
+    test_one<Polygon, MultiPolygon, MultiPolygon>("ggl_list_20120221_volker",
+        ggl_list_20120221_volker[0], ggl_list_20120221_volker[1],
+            2, 12, 7962.66, 1, 18, 2775258.93, 
+            0.001);
 
 
     /* TODO: fix
@@ -163,6 +181,13 @@ void test_areal_linear()
     test_one_lp<LineString, LineString, MultiPolygon>("case_mp_ls_3", 
             "LINESTRING(6 6,6 7,7 7,7 6,8 6,8 7,9 7,9 6)", 
             "MULTIPOLYGON(((5 7,5 8,6 8,6 7,5 7)),((6 6,6 7,7 7,7 6,6 6)),((8 8,9 8,9 7,8 7,7 7,7 8,8 8)))", 2, 5, 3.0);
+
+    return;
+
+    // TODO: this case contains collinearities and should still be solved
+    test_one_lp<LineString, LineString, MultiPolygon>("case_mp_ls_4", 
+            "LINESTRING(0 5,0 6,1 6,1 5,2 5,2 6,3 6,3 5,3 4,3 3,2 3,2 4,1 4,1 3,0 3,0 4)", 
+            "MULTIPOLYGON(((0 2,0 3,1 2,0 2)),((2 5,3 6,3 5,2 5)),((1 5,1 6,2 6,2 5,1 5)),((2 3,2 4,3 4,2 3)),((0 3,1 4,1 3,0 3)),((4 3,3 3,3 5,4 5,4 4,4 3)))", 5, 11, 6.0);
 }
 
 
@@ -183,6 +208,7 @@ int test_main(int, char* [])
     test_all<bg::model::d2::point_xy<double> >();
 
 #ifdef HAVE_TTMATH
+    std::cout << "Testing TTMATH" << std::endl;
     test_all<bg::model::d2::point_xy<ttmath_big> >();
 #endif
 

@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //
 // (C) Copyright Peter Dimov 2002-2005.
-// (C) Copyright Ion Gaztanaga 2006. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2006-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -456,12 +456,12 @@ namespace n_report_1
 {
 
 class foo: public N::base
-{ 
+{
    public:
 
    foo(): m_self(this)
    {
-   } 
+   }
 
    void suicide()
    {
@@ -471,13 +471,13 @@ class foo: public N::base
    private:
 
    boost::interprocess::intrusive_ptr<foo, VP> m_self;
-}; 
+};
 
 void test()
 {
    boost::interprocess::offset_ptr<foo> foo_ptr = new foo;
    foo_ptr->suicide();
-} 
+}
 
 } // namespace n_report_1
 

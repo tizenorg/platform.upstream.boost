@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2011. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -26,7 +26,7 @@
 #include <boost/container/detail/mpl.hpp>
 #include <boost/container/detail/version_type.hpp>
 #include <boost/container/detail/multiallocation_chain.hpp>
-#include <boost/move/move.hpp>
+#include <boost/move/utility.hpp>
 #include <memory>
 #include <algorithm>
 #include <cstddef>
@@ -55,7 +55,7 @@ class simple_allocator
    {}
 
    T* allocate(std::size_t n)
-   {  return (T*)::new char[sizeof(T)*n];  }
+   { return (T*)::new char[sizeof(T)*n];  }
 
    void deallocate(T*p, std::size_t)
    { delete[] ((char*)p);}
@@ -69,7 +69,7 @@ class simple_allocator
 
 //Version 2 allocator with rebind
 template<class T>
-class dummy_test_allocator 
+class dummy_test_allocator
 {
  private:
    typedef dummy_test_allocator<T>  self_t;
@@ -100,7 +100,7 @@ class dummy_test_allocator
 
    //!Default constructor. Never throws
    dummy_test_allocator()
-   {} 
+   {}
 
    //!Constructor from other dummy_test_allocator. Never throws
    dummy_test_allocator(const dummy_test_allocator &)
@@ -111,11 +111,11 @@ class dummy_test_allocator
    dummy_test_allocator(const dummy_test_allocator<T2> &)
    {}
 
-   pointer address(reference value) 
-   {  return pointer(addressof(value));  }
+   pointer address(reference value)
+   {  return pointer(container_detail::addressof(value));  }
 
    const_pointer address(const_reference value) const
-   {  return const_pointer(addressof(value));  }
+   {  return const_pointer(container_detail::addressof(value));  }
 
    pointer allocate(size_type, cvoid_ptr = 0)
    {  return 0; }
@@ -140,7 +140,7 @@ class dummy_test_allocator
 
    std::pair<pointer, bool>
       allocation_command(boost::container::allocation_type,
-                         size_type, 
+                         size_type,
                          size_type,
                          size_type &, const pointer & = 0)
    {  return std::pair<pointer, bool>(pointer(), true); }
@@ -168,8 +168,8 @@ class dummy_test_allocator
    //!preferred_elements. The number of actually allocated elements is
    //!will be assigned to received_size. Memory allocated with this function
    //!must be deallocated only with deallocate_one().
-   multiallocation_chain allocate_individual(size_type)
-   {  return multiallocation_chain(); }
+   void allocate_individual(size_type, multiallocation_chain &)
+   {}
 
    //!Allocates many elements of size == 1 in a contiguous block
    //!of memory. The minimum number to be allocated is min_elements,
@@ -177,7 +177,7 @@ class dummy_test_allocator
    //!preferred_elements. The number of actually allocated elements is
    //!will be assigned to received_size. Memory allocated with this function
    //!must be deallocated only with deallocate_one().
-   void deallocate_individual(multiallocation_chain)
+   void deallocate_individual(multiallocation_chain &)
    {}
 
    //!Allocates many elements of size elem_size in a contiguous block
@@ -186,25 +186,25 @@ class dummy_test_allocator
    //!preferred_elements. The number of actually allocated elements is
    //!will be assigned to received_size. The elements must be deallocated
    //!with deallocate(...)
-   void deallocate_many(multiallocation_chain)
+   void deallocate_many(multiallocation_chain &)
    {}
 };
 
 //!Equality test for same type of dummy_test_allocator
 template<class T> inline
-bool operator==(const dummy_test_allocator<T>  &, 
+bool operator==(const dummy_test_allocator<T>  &,
                 const dummy_test_allocator<T>  &)
 {  return true; }
 
 //!Inequality test for same type of dummy_test_allocator
 template<class T> inline
-bool operator!=(const dummy_test_allocator<T>  &, 
+bool operator!=(const dummy_test_allocator<T>  &,
                 const dummy_test_allocator<T>  &)
 {  return false; }
 
 
 template< class T
-        , bool PropagateOnContCopyAssign 
+        , bool PropagateOnContCopyAssign
         , bool PropagateOnContMoveAssign
         , bool PropagateOnContSwap
         , bool CopyOnPropagateOnContSwap
@@ -335,7 +335,7 @@ class propagation_test_allocator
 };
 
 template< class T
-        , bool PropagateOnContCopyAssign 
+        , bool PropagateOnContCopyAssign
         , bool PropagateOnContMoveAssign
         , bool PropagateOnContSwap
         , bool CopyOnPropagateOnContSwap

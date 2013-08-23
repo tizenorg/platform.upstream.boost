@@ -146,6 +146,9 @@
 				RelativePath="..\..\test\expand_bwd_test_template.hpp">
 			</File>
 			<File
+				RelativePath="..\..\test\forward_to_input_iterator.hpp">
+			</File>
+			<File
 				RelativePath="..\..\test\heap_allocator_v1.hpp">
 			</File>
 			<File
@@ -180,6 +183,9 @@
 			Name="container"
 			Filter="">
 			<File
+				RelativePath="..\..\..\..\boost\container\allocator_traits.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\boost\container\container_fwd.hpp">
 			</File>
 			<File
@@ -196,6 +202,12 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\container\map.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\container\scoped_allocator.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\container\scoped_allocator_fwd.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\container\set.hpp">
@@ -216,19 +228,6 @@
 				RelativePath="..\..\..\..\boost\container\vector.hpp">
 			</File>
 			<Filter
-				Name="allocator"
-				Filter="">
-				<File
-					RelativePath="..\..\..\..\boost\container\allocator\allocator_traits.hpp">
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\container\allocator\memory_util.hpp">
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\container\allocator\scoped_allocator.hpp">
-				</File>
-			</Filter>
-			<Filter
 				Name="detail"
 				Filter="">
 				<File
@@ -242,6 +241,9 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\boost\container\detail\allocation_type.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\container\detail\allocator_version_traits.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\boost\container\detail\config_begin.hpp">
@@ -263,6 +265,9 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\boost\container\detail\math_functions.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\container\detail\memory_util.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\boost\container\detail\mpl.hpp">

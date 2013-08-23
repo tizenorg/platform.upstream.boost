@@ -84,12 +84,12 @@ void test_empty_string()
 #endif
 
 // Currently, no compiler and STL library fully support char16_t and char32_t
-//#ifndef BOOST_NO_CHAR16_T
+//#ifndef BOOST_NO_CXX11_CHAR16_T
 //    std::basic_string<char16_t> v16w;
 //    do_test_on_empty_input(v16w);
 //    BOOST_CHECK_THROW(lexical_cast<char16_t>(v16w), bad_lexical_cast);
 //#endif
-//#ifndef BOOST_NO_CHAR32_T
+//#ifndef BOOST_NO_CXX11_CHAR32_T
 //    std::basic_string<char32_t> v32w;
 //    do_test_on_empty_input(v32w);
 //    BOOST_CHECK_THROW(lexical_cast<char32_t>(v32w), bad_lexical_cast);
@@ -138,6 +138,19 @@ void test_empty_vector()
     BOOST_CHECK_THROW(lexical_cast<signed char>(v), bad_lexical_cast);
 }
 
+
+struct my_string {
+    friend std::ostream &operator<<(std::ostream& sout, my_string const&/* st*/) {
+            return sout << "";
+    }
+};
+
+void test_empty_zero_terminated_string()
+{
+    my_string st;
+    BOOST_CHECK_EQUAL(boost::lexical_cast<std::string>(st), std::string());;
+}
+
 unit_test::test_suite *init_unit_test_suite(int, char *[])
 {
     unit_test::test_suite *suite =
@@ -146,6 +159,7 @@ unit_test::test_suite *init_unit_test_suite(int, char *[])
     suite->add(BOOST_TEST_CASE(&test_empty_string));
     suite->add(BOOST_TEST_CASE(&test_empty_user_class));
     suite->add(BOOST_TEST_CASE(&test_empty_vector));
+    suite->add(BOOST_TEST_CASE(&test_empty_zero_terminated_string));
 
     return suite;
 }

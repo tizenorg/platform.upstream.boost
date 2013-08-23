@@ -7,6 +7,10 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+// #define BOOST_GEOMETRY_TEST_ONLY_ONE_TYPE
+// #define BOOST_GEOMETRY_OVERLAY_NO_THROW
+// #define TEST_WITH_SVG
+// #define HAVE_TTMATH
 
 #include <iostream>
 #include <iomanip>
@@ -83,7 +87,7 @@ struct test_traverse
 {
 
     static void apply(std::string const& id,
-            int expected_count, double expected_area,
+            std::size_t expected_count, double expected_area,
             G1 const& g1, G2 const& g2,
             double precision)
     {
@@ -353,7 +357,7 @@ struct test_traverse
             G1, G2, Direction, Reverse1, Reverse2
         > detail_test_traverse;
 
-    inline static void apply(std::string const& id, int expected_count, double expected_area,
+    inline static void apply(std::string const& id, std::size_t expected_count, double expected_area,
                 std::string const& wkt1, std::string const& wkt2,
                 double precision = 0.001)
     {
@@ -630,8 +634,7 @@ void test_all(bool test_self_tangencies = true, bool test_mixed = false)
             2, 16, case_53[0], case_53[2]);
     if (test_self_tangencies)
     {
-        // The st_st version might generate one ring with area zero, which is OK
-        test_traverse<polygon, polygon, operation_union>::apply("54_st_st", 3, 20, case_54[0], case_54[2]);
+        test_traverse<polygon, polygon, operation_union>::apply("54_st_st", 2, 20, case_54[0], case_54[2]);
         test_traverse<polygon, polygon, operation_union>::apply("54_st_iet", 2, 20, case_54[0], case_54[3]);
         test_traverse<polygon, polygon, operation_union>::apply("54_iet_st", 2, 20, case_54[1], case_54[2]);
     }
@@ -783,6 +786,7 @@ void test_all(bool test_self_tangencies = true, bool test_mixed = false)
     // the chance is 50% that the segments are not sorted correctly and the wrong
     // decision is taken.
     // Solved now (by sorting on sides in those cases)
+    if (! is_float_on_non_msvc)
     {
         test_traverse<polygon, polygon, operation_intersection>::apply("dz_1",
                 3, 16.887537949472005, dz_1[0], dz_1[1]);
@@ -823,22 +827,11 @@ void test_all(bool test_self_tangencies = true, bool test_mixed = false)
     }
 
     {
-        // Note: values are checked with SQL Server,
-        /*
-            select geometry::STGeomFromText('POLYGON((...))', 0)
-                .STIntersection(geometry::STGeomFromText('...))', 0))
-                .STArea()
-
-            and STUnion
-        */
-
-        // Boost.List during Formal Review, isovists Brandon
-        // For FP, they may deviate more.
         test_traverse<polygon, polygon, operation_intersection>::apply("isov",
-                1, 88.1920416352664, isovist[0], isovist[1],
+                1, 88.1920, isovist[0], isovist[1],
                 float_might_deviate_more);
         test_traverse<polygon, polygon, operation_union>::apply("isov",
-                1, 313.360374193241, isovist[0], isovist[1],
+                1, 313.3604, isovist[0], isovist[1],
                 float_might_deviate_more);
     }
 
@@ -892,8 +885,10 @@ void test_all(bool test_self_tangencies = true, bool test_mixed = false)
 
 #if defined(_MSC_VER)
         double const expected = if_typed_tt<T>(3.63794e-17, 0.0);
+        int expected_count = if_typed_tt<T>(1, 0);
 #else
         double const expected = if_typed<T, long double>(2.77555756156289135106e-17, 0.0);
+        int expected_count = if_typed<T, long double>(1, 0);
 #endif
 
         // Calculate intersection/union of two triangles. Robustness case.
@@ -901,12 +896,57 @@ void test_all(bool test_self_tangencies = true, bool test_mixed = false)
         // (which is even not accomplished by SQL Server/PostGIS)
         std::string const caseid = "ggl_list_20110820_christophe";
         test_traverse<polygon, polygon, operation_intersection>::apply(caseid, 
-            1, expected,
+            expected_count, expected,
             ggl_list_20110820_christophe[0], ggl_list_20110820_christophe[1]);
         test_traverse<polygon, polygon, operation_union>::apply(caseid, 
             1, 67.3550722317627, 
             ggl_list_20110820_christophe[0], ggl_list_20110820_christophe[1]);
     }
+
+    test_traverse<polygon, polygon, operation_union>::apply("buffer_rt_f", 
+        1, 4.60853, 
+        buffer_rt_f[0], buffer_rt_f[1]);
+    test_traverse<polygon, polygon, operation_intersection>::apply("buffer_rt_f", 
+        1, 0.0002943725152286, 
+        buffer_rt_f[0], buffer_rt_f[1], 0.01);
+
+    test_traverse<polygon, polygon, operation_union>::apply("buffer_rt_g", 
+        1, 16.571, 
+        buffer_rt_g[0], buffer_rt_g[1]);
+
+    test_traverse<polygon, polygon, operation_union>::apply("buffer_rt_g_boxes1", 
+        1, 20, 
+        buffer_rt_g_boxes[0], buffer_rt_g_boxes[1]);
+    test_traverse<polygon, polygon, operation_union>::apply("buffer_rt_g_boxes2", 
+        1, 24, 
+        buffer_rt_g_boxes[0], buffer_rt_g_boxes[2]);
+    test_traverse<polygon, polygon, operation_union>::apply("buffer_rt_g_boxes3", 
+        1, 28, 
+        buffer_rt_g_boxes[0], buffer_rt_g_boxes[3]);
+
+    test_traverse<polygon, polygon, operation_union>::apply("buffer_rt_g_boxes43", 
+        1, 30, 
+        buffer_rt_g_boxes[4], buffer_rt_g_boxes[3]);
+
+#ifdef BOOST_GEOMETRY_OVERLAY_NO_THROW
+    {
+        // NOTE: currently throws (normally)
+        std::string caseid = "ggl_list_20120229_volker";
+        test_traverse<polygon, polygon, operation_union>::apply(caseid, 
+            1, 99, 
+            ggl_list_20120229_volker[0], ggl_list_20120229_volker[1]);
+        test_traverse<polygon, polygon, operation_intersection>::apply(caseid, 
+            1, 99, 
+            ggl_list_20120229_volker[0], ggl_list_20120229_volker[1]);
+        caseid = "ggl_list_20120229_volker_2";
+        test_traverse<polygon, polygon, operation_union>::apply(caseid, 
+            1, 99, 
+            ggl_list_20120229_volker[2], ggl_list_20120229_volker[1]);
+        test_traverse<polygon, polygon, operation_intersection>::apply(caseid, 
+            1, 99, 
+            ggl_list_20120229_volker[2], ggl_list_20120229_volker[1]);
+    }
+#endif
 }
 
 template <typename T>

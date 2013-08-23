@@ -2,6 +2,9 @@
 //
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+#define BOOST_THREAD_VERSION 2
+
 #include <boost/thread/thread.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/thread/mutex.hpp>
@@ -47,7 +50,8 @@ void test_thread_move_from_rvalue_on_construction()
 
 void test_thread_move_from_rvalue_using_explicit_move()
 {
-    boost::thread x(boost::move(start_thread()));
+    //boost::thread x(boost::move(start_thread()));
+    boost::thread x=start_thread();
     BOOST_CHECK(x.get_id()!=boost::thread::id());
     x.join();
 }
@@ -93,7 +97,7 @@ namespace user_test_ns
     struct nc:
         public boost::shared_ptr<int>
     {
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
         nc() {}
         nc(nc&&)
         {
@@ -108,20 +112,15 @@ namespace user_test_ns
     };
 }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
 namespace boost
 {
-    template <>
-    struct has_move_emulation_enabled_aux<user_test_ns::nc>
-      : BOOST_MOVE_BOOST_NS::integral_constant<bool, true>
-    {};
+    BOOST_THREAD_DCL_MOVABLE(user_test_ns::nc)
 }
-#endif
 
 void test_move_for_user_defined_type_unaffected()
 {
     user_test_ns::nc src;
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
     user_test_ns::nc dest=boost::move(src);
 #else
     user_test_ns::nc dest=move(src);
@@ -142,4 +141,17 @@ boost::unit_test::test_suite* init_unit_test_suite(int, char*[])
     test->add(BOOST_TEST_CASE(test_unique_lock_move_from_rvalue_on_construction));
     test->add(BOOST_TEST_CASE(test_move_for_user_defined_type_unaffected));
     return test;
+}
+
+void remove_unused_warning()
+{
+
+  //../../../boost/test/results_collector.hpp:40:13: warning: unused function 'first_failed_assertion' [-Wunused-function]
+  //(void)first_failed_assertion;
+
+  //../../../boost/test/tools/floating_point_comparison.hpp:304:25: warning: unused variable 'check_is_close' [-Wunused-variable]
+  //../../../boost/test/tools/floating_point_comparison.hpp:326:25: warning: unused variable 'check_is_small' [-Wunused-variable]
+  (void)boost::test_tools::check_is_close;
+  (void)boost::test_tools::check_is_small;
+
 }

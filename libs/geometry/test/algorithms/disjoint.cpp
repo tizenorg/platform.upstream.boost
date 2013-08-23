@@ -105,6 +105,16 @@ void test_all()
     test_disjoint<ring, ring>("within_simplex_rr1", within_simplex[0], within_simplex[1], false);
     test_disjoint<ring, ring>("within_simplex_rr2", within_simplex[1], within_simplex[0], false);
 
+    test_disjoint<P, ring>("point_ring1", "POINT(0 0)", "POLYGON((0 0,3 3,6 0,0 0))", false);
+    test_disjoint<P, ring>("point_ring2", "POINT(3 1)", "POLYGON((0 0,3 3,6 0,0 0))", false);
+    test_disjoint<P, ring>("point_ring3", "POINT(0 3)", "POLYGON((0 0,3 3,6 0,0 0))", true);
+    test_disjoint<P, polygon>("point_polygon1", "POINT(0 0)", "POLYGON((0 0,3 3,6 0,0 0))", false);
+    test_disjoint<P, polygon>("point_polygon2", "POINT(3 1)", "POLYGON((0 0,3 3,6 0,0 0))", false);
+    test_disjoint<P, polygon>("point_polygon3", "POINT(0 3)", "POLYGON((0 0,3 3,6 0,0 0))", true);
+
+    test_disjoint<ring, P>("point_ring2", "POLYGON((0 0,3 3,6 0,0 0))", "POINT(0 0)", false);
+    test_disjoint<polygon, P>("point_polygon2", "POLYGON((0 0,3 3,6 0,0 0))", "POINT(0 0)", false);
+
     // Linear
     typedef bg::model::linestring<P> ls;
     typedef bg::model::segment<P> segment;
@@ -112,6 +122,27 @@ void test_all()
     test_disjoint<ls, ls>("ls/ls 2", "linestring(0 0,1 1)", "linestring(1 0,2 1)", true);
     test_disjoint<segment, segment>("s/s 1", "linestring(0 0,1 1)", "linestring(1 0,0 1)", false);
     test_disjoint<segment, segment>("s/s 2", "linestring(0 0,1 1)", "linestring(1 0,2 1)", true);
+
+    // Test degenerate segments (patched by Karsten Ahnert on 2012-07-25)
+    test_disjoint<segment, segment>("s/s 3", "linestring(0 0,0 0)", "linestring(1 0,0 1)", true);
+    test_disjoint<segment, segment>("s/s 4", "linestring(0 0,0 0)", "linestring(0 0,0 0)", false);
+    test_disjoint<segment, segment>("s/s 5", "linestring(0 0,0 0)", "linestring(1 0,1 0)", true);
+    test_disjoint<segment, segment>("s/s 6", "linestring(0 0,0 0)", "linestring(0 1,0 1)", true);
+
+    // Collinear opposite
+    test_disjoint<ls, ls>("ls/ls co", "linestring(0 0,2 2)", "linestring(1 1,0 0)", false);
+    // Collinear opposite and equal
+    test_disjoint<ls, ls>("ls/ls co-e", "linestring(0 0,1 1)", "linestring(1 1,0 0)", false);
+
+
+    // Problem described by Volker/Albert 2012-06-01
+    test_disjoint<polygon, box>("volker_albert_1", 
+        "POLYGON((1992 3240,1992 1440,3792 1800,3792 3240,1992 3240))", 
+        "BOX(1941 2066, 2055 2166)", false);
+
+    test_disjoint<polygon, box>("volker_albert_2", 
+        "POLYGON((1941 2066,2055 2066,2055 2166,1941 2166))", 
+        "BOX(1941 2066, 2055 2166)", false);
 
     // Degenerate linestrings
     {
