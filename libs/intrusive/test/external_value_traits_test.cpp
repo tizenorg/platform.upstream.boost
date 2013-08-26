@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga  2007-2009
+// (C) Copyright Ion Gaztanaga  2007-2012
 //
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
@@ -56,16 +56,16 @@ struct external_traits
       :  values_(values),  node_array_(NumElem)
    {}
 
-   node_ptr to_node_ptr (value_type &value) 
+   node_ptr to_node_ptr (value_type &value)
    {  return (&node_array_[0]) + (&value - values_); }
 
-   const_node_ptr to_node_ptr (const value_type &value) const 
+   const_node_ptr to_node_ptr (const value_type &value) const
    {  return &node_array_[0] + (&value - values_); }
 
    pointer to_value_ptr(node_ptr n)
    {  return values_ + (n - &node_array_[0]); }
 
-   const_pointer to_value_ptr(const_node_ptr n) const 
+   const_pointer to_value_ptr(const_node_ptr n) const
    {  return values_ + (n - &node_array_[0]); }
 
    pointer  values_;

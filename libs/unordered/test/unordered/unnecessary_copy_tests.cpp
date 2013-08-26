@@ -1,30 +1,15 @@
-#include <iostream>
+
 // Copyright 2006-2009 Daniel James.
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include "../helpers/prefix.hpp"
-
 #include <boost/unordered_set.hpp>
 #include <boost/unordered_map.hpp>
-#include "../helpers/test.hpp"
+#include "../helpers/postfix.hpp"
 
-#if defined(BOOST_UNORDERED_VARIADIC_MOVE)
-#   if defined(__SGI_STL_PORT) || defined(_STLPORT_VERSION)
-#   elif defined(__STD_RWCOMPILER_H__) || defined(_RWSTD_VER)
-#   elif defined(_LIBCPP_VERSION)
-#       define BOOST_UNORDERED_VARIADIC_MOVE
-#   elif defined(__GLIBCPP__) || defined(__GLIBCXX__)
-#       if defined(__GLIBCXX__) && __GLIBCXX__ >= 20090804
-#           define BOOST_UNORDERED_VARIADIC_MOVE
-#       endif
-#    elif defined(__STL_CONFIG_H)
-#    elif defined(__MSL_CPP__)
-#    elif defined(__IBMCPP__)
-#    elif defined(MSIPL_COMPILE_H)
-#    elif (defined(_YVALS) && !defined(__IBMCPP__)) || defined(_CPPLIB_VER)
-#   endif
-#endif
+#include <iostream>
+#include "../helpers/test.hpp"
 
 namespace unnecessary_copy_tests
 {
@@ -260,7 +245,8 @@ namespace unnecessary_copy_tests
         // the existing element.
         reset();
         x.emplace();
-#if !defined(BOOST_NO_RVALUE_REFERENCES)
+#if !defined(BOOST_NO_VARIADIC_TEMPLATES) || \
+    !defined(BOOST_NO_RVALUE_REFERENCES)
         // source_cost doesn't make much sense here, but it seems to fit.
         COPY_COUNT(1); MOVE_COUNT(source_cost);
 #else
@@ -420,7 +406,7 @@ namespace unnecessary_copy_tests
                 boost::make_tuple(boost::ref(b.second)));
         COPY_COUNT(0); MOVE_COUNT(0);
         
-#if !defined(BOOST_NO_0X_HDR_TUPLE) || defined(BOOST_HAS_TR1_TUPLE)
+#if !defined(BOOST_NO_CXX11_HDR_TUPLE) || defined(BOOST_HAS_TR1_TUPLE)
 
         reset();
         x.emplace(boost::unordered::piecewise_construct,

@@ -59,7 +59,7 @@ int main ()
                               ,FileSize - FileSize/2
                               ,0);
 
-         //Fill two regions with a pattern   
+         //Fill two regions with a pattern  
          unsigned char *filler = static_cast<unsigned char*>(region.get_address());
          for(std::size_t i = 0
             ;i < FileSize/2
@@ -73,7 +73,11 @@ int main ()
             ;++i){
             *filler++ = static_cast<unsigned char>(i);
          }
-         if(!region.flush()){
+         if(!region.flush(0, 0, false)){
+            return 1;
+         }
+
+         if(!region2.flush(0, 0, true)){
             return 1;
          }
       }
