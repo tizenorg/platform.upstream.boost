@@ -1,6 +1,6 @@
-%define ver 1.51.0
-%define file_version 1_51_0
-%define short_version 1_51
+%define ver 1.56.0
+%define file_version 1_56_0
+%define short_version 1_56
 
 #Define to 0 to not generate the pdf documentation
 %define build_pdf 0
@@ -38,12 +38,12 @@ Url:            http://www.boost.org
 Summary:        Boost C++ Libraries
 License:        BSL-1.0
 Group:          Base/Libraries
-Version:        1.51.0
+Version:        1.56.0
 Release:        0
 Source0:        %{name}_%{file_version}.tar.bz2
 Source1:        boost-rpmlintrc
 Source4:        existing_extra_docs
-Source1001: 	boost.manifest
+Source1001:     boost.manifest
 
 %define _docdir %{_datadir}/doc/packages/boost
 
@@ -259,6 +259,38 @@ Provides:       boost-timer
 %description    -n libboost_timer
 This package contains the Boost::Timer runtime library.
 
+%package        -n libboost_atomic
+Summary:        The Boost::Atomic runtime library
+Requires:       boost-license
+Provides:       boost-atomic
+
+%description    -n libboost_atomic
+This package contains the Boost::Atomic runtime library.
+
+%package        -n libboost_container
+Summary:        The Boost::Container runtime library
+Requires:       boost-license
+Provides:       boost-container
+
+%description    -n libboost_container
+This package contains the Boost::Container runtime library.
+
+%package        -n libboost_coroutine
+Summary:        The Boost::Coroutine runtime library
+Requires:       boost-license
+Provides:       boost-coroutine
+
+%description    -n libboost_coroutine
+This package contains the Boost::Coroutine runtime library.
+
+%package        -n libboost_log
+Summary:        The Boost::Log runtime library
+Requires:       boost-license
+Provides:       boost-log
+
+%description    -n libboost_log
+This package contains the Boost::Log runtime library.
+
 
 %prep
 %setup -q -n %{name}_%{file_version} 
@@ -387,8 +419,8 @@ dos2unix libs/ptr_container/doc/tutorial_example.html \
 find . -name \*.htm\* -o -name \*.gif -o -name \*.css -o -name \*.jpg -o -name \*.png -o -name \*.ico | \
 	tar --files-from=%{S:4} -cf - --files-from=- | tar -C %{buildroot}%{_docdir} -xf -
 rm -rf %{buildroot}%{_docdir}/boost
-ln -s /usr/include/boost %{buildroot}%{_docdir}
-ln -s ../LICENSE_1_0.txt %{buildroot}%{_docdir}/libs
+ln -sf /usr/include/boost %{buildroot}%{_docdir}
+ln -sf ../LICENSE_1_0.txt %{buildroot}%{_docdir}/libs
 #Copy the news file.
 #cp %%{S:5} %%{buildroot}%%{_docdir}
 #only for documentation, doesn't need to be executable
@@ -411,8 +443,6 @@ rm -f %{buildroot}%{_libdir}/*.a
 %post -n libboost_signals -p /sbin/ldconfig
 %post -n libboost_thread -p /sbin/ldconfig
 %post -n libboost_math -p /sbin/ldconfig 
-
-
 %ifnarch aarch64
 %post -n libboost_context -p /sbin/ldconfig
 %endif
@@ -423,6 +453,10 @@ rm -f %{buildroot}%{_libdir}/*.a
 %post -n libboost_chrono -p /sbin/ldconfig
 %post -n libboost_locale -p /sbin/ldconfig
 %post -n libboost_timer -p /sbin/ldconfig
+%post -n libboost_atomic -p /sbin/ldconfig
+%post -n libboost_container -p /sbin/ldconfig
+%post -n libboost_coroutine -p /sbin/ldconfig
+%post -n libboost_log -p /sbin/ldconfig 
 
 %postun -n libboost_date_time -p /sbin/ldconfig
 %ifnarch aarch64
@@ -438,8 +472,6 @@ rm -f %{buildroot}%{_libdir}/*.a
 %postun -n libboost_signals -p /sbin/ldconfig
 %postun -n libboost_thread -p /sbin/ldconfig
 %postun -n libboost_math -p /sbin/ldconfig
-
-
 %postun -n libboost_graph -p /sbin/ldconfig
 %postun -n libboost_system -p /sbin/ldconfig
 %postun -n libboost_wave -p /sbin/ldconfig
@@ -447,12 +479,15 @@ rm -f %{buildroot}%{_libdir}/*.a
 %postun -n libboost_chrono -p /sbin/ldconfig
 %postun -n libboost_locale -p /sbin/ldconfig
 %postun -n libboost_timer -p /sbin/ldconfig
+%postun -n libboost_atomic -p /sbin/ldconfig
+%postun -n libboost_container -p /sbin/ldconfig
+%postun -n libboost_coroutine -p /sbin/ldconfig
+%postun -n libboost_log -p /sbin/ldconfig 
 
 %files -n boost-license
 %manifest %{name}.manifest
 %license LICENSE_1_0.txt
 %defattr(-, root, root, -)
-##%doc %{_docdir}/LICENSE_1_0.txt
 
 %files -n libboost_date_time
 %manifest %{name}.manifest
@@ -478,7 +513,6 @@ rm -f %{buildroot}%{_libdir}/*.a
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_math_*.so.*
-
 
 %files -n libboost_test
 %manifest %{name}.manifest
@@ -546,6 +580,26 @@ rm -f %{buildroot}%{_libdir}/*.a
 %defattr(-, root, root, -)
 %{_libdir}/libboost_timer*.so.*
 
+%files -n libboost_atomic
+%manifest %{name}.manifest
+%defattr(-, root, root, -)
+%{_libdir}/libboost_atomic*.so.*
+
+%files -n libboost_container
+%manifest %{name}.manifest
+%defattr(-, root, root, -)
+%{_libdir}/libboost_container*.so.*
+
+%files -n libboost_coroutine
+%manifest %{name}.manifest
+%defattr(-, root, root, -)
+%{_libdir}/libboost_coroutine*.so.*
+
+%files -n libboost_log
+%manifest %{name}.manifest
+%defattr(-, root, root, -)
+%{_libdir}/libboost_log*.so.*
+
 %ifnarch aarch64
 %files -n libboost_context
 %manifest %{name}.manifest
@@ -559,6 +613,3 @@ rm -f %{buildroot}%{_libdir}/*.a
 %defattr(-, root, root, -)
 %{_includedir}/boost
 %{_libdir}/*.so
-
-
-%changelog
