@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //
 // (C) Copyright Peter Dimov 2002-2005, 2007.
-// (C) Copyright Ion Gaztanaga 2006-2011.
+// (C) Copyright Ion Gaztanaga 2006-2012.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -53,7 +53,6 @@ int simple_test()
    typedef deleter<base_class, managed_shared_memory::segment_manager>
       base_deleter_t;
    typedef shared_ptr<base_class, base_class_allocator, base_deleter_t>    base_shared_ptr;
-   typedef weak_ptr<base_class, base_class_allocator, base_deleter_t>      base_weak_ptr;
 
    std::string process_name;
    test::get_process_id_name(process_name);
@@ -144,7 +143,7 @@ int string_shared_ptr_vector_insertion_test()
    {
       managed_shared_memory shmem(create_only, process_name.c_str(), 20000);
 
-      { 
+      {
          const int NumElements = 100;
          //Construct the allocator of strings
          string_allocator_t string_allocator(shmem.get_segment_manager());
@@ -202,7 +201,7 @@ int string_shared_ptr_vector_insertion_test()
          }
          //Now fill a vector of weak_ptr-s
          string_weak_ptr_vector_t my_weakptr_vector(string_weak_ptr_allocator);
-         my_weakptr_vector.insert(my_weakptr_vector.begin(), NumElements, string_weak_ptr);     
+         my_weakptr_vector.insert(my_weakptr_vector.begin(), NumElements, string_weak_ptr);
          //The shared count should remain the same
          if(string_shared_ptr.use_count() != static_cast<long>(my_sharedptr_vector.size()+1)){
             return 1;
@@ -561,17 +560,11 @@ void test_alias()
    typedef allocator<void, managed_shared_memory::segment_manager>
       v_allocator_t;
 
-   typedef deleter<alias_tester, managed_shared_memory::segment_manager>
-      alias_tester_deleter_t;
-
    typedef deleter<int, managed_shared_memory::segment_manager>
       int_deleter_t;
 
-   typedef shared_ptr<alias_tester, v_allocator_t, alias_tester_deleter_t> alias_tester_shared_ptr;
-
    typedef shared_ptr<int, v_allocator_t, int_deleter_t> int_shared_ptr;
    typedef shared_ptr<const int, v_allocator_t, int_deleter_t> const_int_shared_ptr;
-   typedef shared_ptr<volatile int, v_allocator_t, int_deleter_t> volatile_int_shared_ptr;
 
    std::string process_name;
    test::get_process_id_name(process_name);

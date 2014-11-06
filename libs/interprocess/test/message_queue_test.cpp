@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2004-2011. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2004-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -15,10 +15,11 @@
 #include <boost/interprocess/containers/map.hpp>
 #include <boost/interprocess/containers/set.hpp>
 #include <boost/interprocess/allocators/node_allocator.hpp>
+#include <boost/interprocess/detail/os_thread_functions.hpp>
 #include <vector>
+#include <iostream>
 #include <cstddef>
 #include <limits>
-#include <boost/thread.hpp>
 #include <memory>
 #include <string>
 #include "get_process_id_name.hpp"
@@ -48,6 +49,8 @@ bool test_priority_order()
       message_queue::size_type recvd = 0;
       unsigned int priority = 0;
       std::size_t tstamp;
+      unsigned int priority_prev;
+      std::size_t  tstamp_prev;
 
       //We will send 100 message with priority 0-9
       //The message will contain the timestamp of the message
@@ -56,8 +59,31 @@ bool test_priority_order()
          mq1.send(&tstamp, sizeof(tstamp), (unsigned int)(i%10));
       }
 
-      unsigned int priority_prev = (std::numeric_limits<unsigned int>::max)();
-      std::size_t  tstamp_prev = 0;
+      priority_prev = (std::numeric_limits<unsigned int>::max)();
+      tstamp_prev = 0;
+
+      //Receive all messages and test those are ordered
+      //by priority and by FIFO in the same priority
+      for(std::size_t i = 0; i < 100; ++i){
+         mq1.receive(&tstamp, sizeof(tstamp), recvd, priority);
+         if(priority > priority_prev)
+            return false;
+         if(priority == priority_prev &&
+            tstamp   <= tstamp_prev){
+            return false;
+         }
+         priority_prev  = priority;
+         tstamp_prev    = tstamp;
+      }
+
+      //Now retry it with different priority order
+      for(std::size_t i = 0; i < 100; ++i){
+         tstamp = i;
+         mq1.send(&tstamp, sizeof(tstamp), (unsigned int)(9 - i%10));
+      }
+
+      priority_prev = (std::numeric_limits<unsigned int>::max)();
+      tstamp_prev = 0;
 
       //Receive all messages and test those are ordered
       //by priority and by FIFO in the same priority
@@ -83,7 +109,7 @@ bool test_priority_order()
 //another buffer and checks it against the original data-base
 bool test_serialize_db()
 {
-   //Typedef data to create a Interprocess map  
+   //Typedef data to create a Interprocess map
    typedef std::pair<const std::size_t, std::size_t> MyPair;
    typedef std::less<std::size_t>   MyLess;
    typedef node_allocator<MyPair, managed_external_buffer::segment_manager>
@@ -157,7 +183,7 @@ bool test_serialize_db()
             break;
          }
       }
-     
+
       //The buffer will contain a copy of the original database
       //so let's interpret the buffer with managed_external_buffer
       managed_external_buffer db_destiny(open_only, &buffer_destiny[0], BufferSize);
@@ -188,7 +214,7 @@ bool test_serialize_db()
             return false;
          }
       }
-     
+
       //Destroy maps from db-s
       db_origin.destroy_ptr(map1);
       db_destiny.destroy_ptr(map2);
@@ -197,11 +223,11 @@ bool test_serialize_db()
    return true;
 }
 //]
+
 static const int MsgSize = 10;
 static const int NumMsg  = 1000;
 static char msgsend [10];
 static char msgrecv [10];
-
 
 static boost::interprocess::message_queue *pmessage_queue;
 
@@ -226,8 +252,9 @@ bool test_buffer_overflow()
       pmessage_queue = ptr.get();
 
       //Launch the receiver thread
-      boost::thread thread(&receiver);
-      boost::thread::yield();
+      boost::interprocess::ipcdetail::OS_thread_t thread;
+      boost::interprocess::ipcdetail::thread_launch(thread, &receiver);
+      boost::interprocess::ipcdetail::thread_yield();
 
       int nummsg = NumMsg;
 
@@ -235,11 +262,88 @@ bool test_buffer_overflow()
          pmessage_queue->send(msgsend, MsgSize, 0);
       }
 
-      thread.join();
+      boost::interprocess::ipcdetail::thread_join(thread);
    }
    boost::interprocess::message_queue::remove(test::get_process_id_name());
    return true;
 }
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// test_multi_sender_receiver is based on Alexander (aalutov's)
+// testcase for ticket #9221. Many thanks.
+//
+//////////////////////////////////////////////////////////////////////////////
+
+static boost::interprocess::message_queue *global_queue = 0;
+//We'll send MULTI_NUM_MSG_PER_SENDER messages per sender
+static const int MULTI_NUM_MSG_PER_SENDER = 10000;
+//Message queue message capacity
+static const int MULTI_QUEUE_SIZE = (MULTI_NUM_MSG_PER_SENDER - 1)/MULTI_NUM_MSG_PER_SENDER + 1;
+//We'll launch MULTI_THREAD_COUNT senders and MULTI_THREAD_COUNT receivers
+static const int MULTI_THREAD_COUNT = 10;
+
+static void multisend()
+{
+	char buff;
+	for (int i = 0; i < MULTI_NUM_MSG_PER_SENDER; i++) {
+		global_queue->send(&buff, 1, 0);
+	}
+	global_queue->send(&buff, 0, 0);
+	//std::cout<<"writer thread complete"<<std::endl;
+}
+
+static void multireceive()
+{
+	char buff;
+	size_t size;
+   int received_msgs = 0;
+	unsigned int priority;
+	do {
+		global_queue->receive(&buff, 1, size, priority);
+      ++received_msgs;
+	} while (size > 0);
+   --received_msgs;
+	//std::cout << "reader thread complete, read msgs: " << received_msgs << std::endl;
+}
+
+
+bool test_multi_sender_receiver()
+{
+   bool ret = true;
+   //std::cout << "Testing multi-sender / multi-receiver " << std::endl;
+	try {
+		boost::interprocess::message_queue::remove(test::get_process_id_name());
+		boost::interprocess::message_queue mq
+         (boost::interprocess::open_or_create, test::get_process_id_name(), MULTI_QUEUE_SIZE, 1);
+      global_queue = &mq;
+      std::vector<boost::interprocess::ipcdetail::OS_thread_t> threads(MULTI_THREAD_COUNT*2);
+
+      //Launch senders receiver thread
+		for (int i = 0; i < MULTI_THREAD_COUNT; i++) {
+         boost::interprocess::ipcdetail::thread_launch
+            (threads[i], &multisend);
+		}
+
+		for (int i = 0; i < MULTI_THREAD_COUNT; i++) {
+         boost::interprocess::ipcdetail::thread_launch
+            (threads[MULTI_THREAD_COUNT+i], &multireceive);
+		}
+
+		for (int i = 0; i < MULTI_THREAD_COUNT*2; i++) {
+         boost::interprocess::ipcdetail::thread_join(threads[i]);
+         //std::cout << "Joined thread " << i << std::endl;
+		}
+	}
+   catch (std::exception &e) {
+		std::cout << "error " << e.what() << std::endl;
+      ret = false;
+	}
+   boost::interprocess::message_queue::remove(test::get_process_id_name());
+	return ret;
+}
+
 
 int main ()
 {
@@ -252,6 +356,10 @@ int main ()
    }
 
    if(!test_buffer_overflow()){
+      return 1;
+   }
+
+   if(!test_multi_sender_receiver()){
       return 1;
    }
 

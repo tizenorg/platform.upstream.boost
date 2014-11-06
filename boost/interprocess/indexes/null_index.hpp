@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2011. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -34,8 +34,8 @@ class null_index
    /// @endcond
 
    public:
-   typedef void * iterator;
-   typedef const void * const_iterator;
+   typedef int * iterator;
+   typedef const int * const_iterator;
 
    //!begin() is equal
    //!to end()

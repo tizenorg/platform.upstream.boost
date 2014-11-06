@@ -24,6 +24,7 @@
 \defgroup core core: meta-functions for geometry types
 \defgroup correct correct: correct geometries
 \defgroup covered_by covered_by: detect if a geometry is inside or on the border of another geometry, a.o. point-in-polygon (border included)
+\defgroup crosses crosses: detect if two geometries crosses each other
 \defgroup cs coordinate systems
 \defgroup difference difference: difference of two geometries
 \defgroup disjoint disjoint: detect if geometries are not spatially related
@@ -39,6 +40,8 @@
 \defgroup interior_rings interior_rings: interior_rings
 \defgroup intersection intersection: calculate new geometry
 \defgroup intersects intersects: detect if a geometry self-intersects or if two geometries intersect
+\defgroup is_simple is_simple: detect if a geometry is simple
+\defgroup is_valid is_valid: detect if a geometry is valid
 \defgroup iterators iterators: iterators
 \defgroup length length: calculate length of a linear geometry
 \defgroup make make: construct geometries
@@ -56,7 +59,7 @@
 \defgroup set set: set geometries
 \defgroup simplify simplify: remove points from a geometry, keeping shape (simplification or generalization)
 \defgroup strategies strategies: strategies
-\defgroup svg x Extension svg: Stream SVG (Scalable Vector Graphics)
+\defgroup svg svg: Stream SVG (Scalable Vector Graphics)
 \defgroup sym_difference sym_difference: sym_difference of two geometries
 \defgroup touches touches: detect if a geometry self-touches or if two geometries touch
 \defgroup traits traits: adapt geometries

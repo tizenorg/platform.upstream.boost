@@ -28,16 +28,14 @@
 #include <boost/geometry/io/wkt/read.hpp>
 
 
+// For output:
+#include <boost/geometry/io/svg/svg_mapper.hpp>
+
+// Yes, this example currently uses an extension:
+
+// For distance-calculations over the Earth:
+//#include <boost/geometry/extensions/gis/geographic/strategies/andoyer.hpp>
 // Yes, this example currently uses some extensions:
-
-    // For output:
-    #if defined(HAVE_SVG)
-    #  include <boost/geometry/extensions/io/svg/svg_mapper.hpp>
-    #endif
-
-    // For distance-calculations over the Earth:
-    //#include <boost/geometry/extensions/gis/geographic/strategies/andoyer.hpp>
-
 
 
 // Read an ASCII file containing WKT's, fill a vector of tuples
@@ -306,12 +304,12 @@ int main()
     double const km = 1000.0;
     std::cout << "distances, all in KM" << std::endl
         << std::fixed << std::setprecision(0);
-        
+
     // To calculate distance, declare and construct a strategy with average earth radius
-    boost::geometry::strategy::distance::haversine<point_type> haversine(6372795.0);
+    boost::geometry::strategy::distance::haversine<double> haversine(6372795.0);
 
     // Main functionality: calculate shortest routes from/to all cities
-    
+
 
     // For the first one, the complete route is stored as a linestring
     bool first = true;
@@ -387,7 +385,7 @@ int main()
         mapper.text(city.get<0>(), city.get<1>(),
                 "fill:rgb(0,0,0);font-family:Arial;font-size:10px", 5, 5);
     }
-#endif    
+#endif
 
     return 0;
 }

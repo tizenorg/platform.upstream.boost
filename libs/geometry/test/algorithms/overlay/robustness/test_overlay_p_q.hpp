@@ -28,7 +28,7 @@
 #include <boost/geometry/geometries/geometries.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/multi/geometries/multi_polygon.hpp>
-#include <boost/geometry/extensions/io/svg/svg_mapper.hpp>
+#include <boost/geometry/io/svg/svg_mapper.hpp>
 
 #include <boost/geometry/algorithms/detail/overlay/debug_turn_info.hpp>
 #include <boost/geometry/algorithms/intersects.hpp>
@@ -110,7 +110,7 @@ static bool test_overlay_p_q(std::string const& caseid,
         if ((area_i > 0 && bg::touches(p, q))
             || (area_i <= 0 && bg::intersects(p, q) && ! bg::touches(p, q)))
         {
-            std::cout << "Wrong 'touch'! " 
+            std::cout << "Wrong 'touch'! "
                 << " Intersection area: " << area_i
                 << " Touch gives: " << std::boolalpha << bg::touches(p, q)
                 << std::endl;

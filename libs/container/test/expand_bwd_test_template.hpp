@@ -135,7 +135,7 @@ bool test_insert_with_expand_bwd()
    for(int iteration = 0; iteration < Iterations; ++iteration)
    {
       value_type *memory = new value_type[MemorySize];
-      try {
+      BOOST_TRY {
          std::vector<non_volatile_value_type> initial_data;
          initial_data.resize(InitialSize[iteration]);
          for(int i = 0; i < InitialSize[iteration]; ++i){
@@ -165,10 +165,11 @@ bool test_insert_with_expand_bwd()
             return false;
          }
       }
-      catch(...){
+      BOOST_CATCH(...){
          delete [](const_cast<non_volatile_value_type*>(memory));
-         throw;
+         BOOST_RETHROW;
       }
+      BOOST_CATCH_END
       delete [](const_cast<non_volatile_value_type*>(memory));
    }
 
@@ -182,18 +183,17 @@ bool test_assign_with_expand_bwd()
 {
    typedef typename VectorWithExpandBwdAllocator::value_type value_type;
    typedef typename boost::remove_volatile<value_type>::type non_volatile_value_type;
-   typedef std::vector<non_volatile_value_type> Vect;
    const int MemorySize = 200;
 
    const int Offset[]      = { 50, 50, 50};
    const int InitialSize[] = { 25, 25, 25};
-   const int AssignSize[]  = { 40, 60, 80};
-   const int Iterations    = sizeof(AssignSize)/sizeof(int);
+   const int InsertSize[]  = { 15, 35, 55};
+   const int Iterations    = sizeof(InsertSize)/sizeof(int);
 
    for(int iteration = 0; iteration <Iterations; ++iteration)
    {
       value_type *memory = new value_type[MemorySize];
-      try {
+      BOOST_TRY {
          //Create initial data
          std::vector<non_volatile_value_type> initial_data;
          initial_data.resize(InitialSize[iteration]);
@@ -202,10 +202,10 @@ bool test_assign_with_expand_bwd()
          }
 
          //Create data to assign
-         std::vector<non_volatile_value_type> data_to_assign;
-         data_to_assign.resize(AssignSize[iteration]);
-         for(int i = 0; i < AssignSize[iteration]; ++i){
-            data_to_assign[i] = -i;
+         std::vector<non_volatile_value_type> data_to_insert;
+         data_to_insert.resize(InsertSize[iteration]);
+         for(int i = 0; i < InsertSize[iteration]; ++i){
+            data_to_insert[i] = -i;
          }
 
          //Insert initial data to the vector to test
@@ -216,8 +216,8 @@ bool test_assign_with_expand_bwd()
                      , initial_data.begin(), initial_data.end());
 
          //Assign data
-         vector.assign(data_to_assign.begin(), data_to_assign.end());
-         initial_data.assign(data_to_assign.begin(), data_to_assign.end());
+         vector.insert(vector.cbegin(), data_to_insert.begin(), data_to_insert.end());
+         initial_data.insert(initial_data.begin(), data_to_insert.begin(), data_to_insert.end());
 
          //Now check that values are equal
          if(!CheckEqualVector(vector, initial_data)){
@@ -227,10 +227,11 @@ bool test_assign_with_expand_bwd()
             return false;
          }
       }
-      catch(...){
+      BOOST_CATCH(...){
          delete [](const_cast<typename boost::remove_volatile<value_type>::type*>(memory));
-         throw;
+         BOOST_RETHROW;
       }
+      BOOST_CATCH_END
       delete [](const_cast<typename boost::remove_volatile<value_type>::type*>(memory));
    }
 

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2004-2011. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2004-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -23,7 +23,7 @@ namespace boost { namespace interprocess { namespace test {
 
 template <class NamedResource>
 inline void create_then_open_then_open_or_create()
-{ 
+{
    try{
       //Create it and open it twice
       NamedResource nresource1(create_only);
@@ -32,36 +32,36 @@ inline void create_then_open_then_open_or_create()
    }
    catch(...){
       //This shouldn't throw so show the error
-      BOOST_INTERPROCES_CHECK( false );
+      BOOST_INTERPROCESS_CHECK( false );
    }
 }
 
 template <class NamedResource>
 inline void open_or_create_then_create()
-{ 
+{
    //Create it with open_or_create and try to create it twice
    NamedResource nresource1(open_or_create);
    try{
       NamedResource nresource2(create_only);
    }
    catch(interprocess_exception &err){
-      BOOST_INTERPROCES_CHECK(err.get_error_code() == already_exists_error);
+      BOOST_INTERPROCESS_CHECK(err.get_error_code() == already_exists_error);
    }
 }
 
 template <class NamedResource>
 inline void dont_create_and_open()
-{ 
+{
    //Try to open it without creating
    try{
       NamedResource nresource1(open_only);
    }
    catch(interprocess_exception &err){
-      BOOST_INTERPROCES_CHECK(err.get_error_code() == not_found_error);
+      BOOST_INTERPROCESS_CHECK(err.get_error_code() == not_found_error);
       return;
    }
    //The mutex should not exist
-   BOOST_INTERPROCES_CHECK(false);
+   BOOST_INTERPROCESS_CHECK(false);
 }
 
 template <class NamedResource>

@@ -8,9 +8,9 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
-#define BOOST_GEOMETRY_REPORT_OVERLAY_ERROR
+// #define BOOST_GEOMETRY_REPORT_OVERLAY_ERROR
 #define BOOST_GEOMETRY_NO_BOOST_TEST
-#define BOOST_GEOMETRY_TIME_OVERLAY
+// #define BOOST_GEOMETRY_TIME_OVERLAY
 
 
 #include <test_overlay_p_q.hpp>
@@ -60,8 +60,6 @@ void test_all(int count, int star_point_count, int comb_comb_count, double facto
             bg::model::d2::point_xy<T>, Clockwise, Closed
         > polygon;
 
-
-    int index = 0;
     for(int i = 0; i < count; i++)
     {
         test_star_comb<polygon>(star_point_count, comb_comb_count, factor1, factor2, do_union, settings);

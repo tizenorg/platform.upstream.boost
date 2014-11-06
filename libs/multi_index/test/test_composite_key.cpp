@@ -1,6 +1,6 @@
 /* Boost.MultiIndex test for composite_key.
  *
- * Copyright 2003-2009 Joaquin M Lopez Munoz.
+ * Copyright 2003-2013 Joaquin M Lopez Munoz.
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -11,13 +11,13 @@
 #include "test_composite_key.hpp"
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
+#include <boost/detail/lightweight_test.hpp>
 #include "pre_multi_index.hpp"
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/composite_key.hpp>
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/member.hpp>
 #include <boost/multi_index/ordered_index.hpp>
-#include <boost/test/test_tools.hpp>
 
 using namespace boost::multi_index;
 using namespace boost::tuples;
@@ -74,12 +74,9 @@ struct comparison_equal_length
     composite_key_result_equal_to<CompositeKeyResult> eq;
     composite_key_result_less<CompositeKeyResult>     lt;
     composite_key_result_greater<CompositeKeyResult>  gt;
-
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-    std::equal_to<CompositeKeyResult> std_eq;
-    std::less<CompositeKeyResult>     std_lt;
-    std::greater<CompositeKeyResult>  std_gt;
-#endif
+    std::equal_to<CompositeKeyResult>                 std_eq;
+    std::less<CompositeKeyResult>                     std_lt;
+    std::greater<CompositeKeyResult>                  std_gt;
 
     return  (x< y) && !(y< x)&&
            !(x==y) && !(y==x)&&
@@ -87,18 +84,12 @@ struct comparison_equal_length
            !(x> y) &&  (y> x)&&
            !(x>=y) &&  (y>=x)&&
             (x<=y) && !(y<=x)&&
-
           !eq(x,y) && !eq(y,x)&&
            lt(x,y) && !lt(y,x)&&
-          !gt(x,y) &&  gt(y,x)
-
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-                   &&
+          !gt(x,y) &&  gt(y,x)&&
       !std_eq(x,y) && !std_eq(y,x)&&
        std_lt(x,y) && !std_lt(y,x)&&
-      !std_gt(x,y) &&  std_gt(y,x)
-#endif
-                    ;
+      !std_gt(x,y) &&  std_gt(y,x);
   }
 
   static bool is_greater(const CompositeKeyResult& x,const T2& y)
@@ -106,12 +97,9 @@ struct comparison_equal_length
     composite_key_result_equal_to<CompositeKeyResult> eq;
     composite_key_result_less<CompositeKeyResult>     lt;
     composite_key_result_greater<CompositeKeyResult>  gt;
-
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-    std::equal_to<CompositeKeyResult> std_eq;
-    std::less<CompositeKeyResult>     std_lt;
-    std::greater<CompositeKeyResult>  std_gt;
-#endif
+    std::equal_to<CompositeKeyResult>                 std_eq;
+    std::less<CompositeKeyResult>                     std_lt;
+    std::greater<CompositeKeyResult>                  std_gt;
 
     return !(x< y) &&  (y< x)&&
            !(x==y) && !(y==x)&&
@@ -119,18 +107,12 @@ struct comparison_equal_length
             (x> y) && !(y> x)&&
             (x>=y) && !(y>=x)&&
            !(x<=y) &&  (y<=x)&&
-
           !eq(x,y) && !eq(y,x)&&
           !lt(x,y) &&  lt(y,x)&&
-           gt(x,y) && !gt(y,x)
-
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-                   &&
+           gt(x,y) && !gt(y,x)&&
       !std_eq(x,y) && !std_eq(y,x)&&
       !std_lt(x,y) &&  std_lt(y,x)&&
-       std_gt(x,y) && !std_gt(y,x)
-#endif
-                    ;
+       std_gt(x,y) && !std_gt(y,x);
   }
 
   static bool is_equiv(const CompositeKeyResult& x,const T2& y)
@@ -138,12 +120,9 @@ struct comparison_equal_length
     composite_key_result_equal_to<CompositeKeyResult> eq;
     composite_key_result_less<CompositeKeyResult>     lt;
     composite_key_result_greater<CompositeKeyResult>  gt;
-
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-    std::equal_to<CompositeKeyResult> std_eq;
-    std::less<CompositeKeyResult>     std_lt;
-    std::greater<CompositeKeyResult>  std_gt;
-#endif
+    std::equal_to<CompositeKeyResult>                 std_eq;
+    std::less<CompositeKeyResult>                     std_lt;
+    std::greater<CompositeKeyResult>                  std_gt;
 
     return !(x< y) && !(y< x)&&
             (x==y) &&  (y==x)&&
@@ -151,18 +130,12 @@ struct comparison_equal_length
            !(x> y) && !(y> x)&&
             (x>=y) &&  (y>=x)&&
             (x<=y) &&  (y<=x)&&
-
            eq(x,y) &&  eq(y,x)&&
           !lt(x,y) && !lt(y,x)&&
-          !gt(x,y) && !gt(y,x)
-
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-                   &&
+          !gt(x,y) && !gt(y,x)&&
        std_eq(x,y) &&  std_eq(y,x)&&
       !std_lt(x,y) && !std_lt(y,x)&&
-      !std_gt(x,y) && !std_gt(y,x)
-#endif
-                    ;
+      !std_gt(x,y) && !std_gt(y,x);
   }
 };
 
@@ -173,78 +146,51 @@ struct comparison_different_length
   {
     composite_key_result_less<CompositeKeyResult>    lt;
     composite_key_result_greater<CompositeKeyResult> gt;
-
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-    std::less<CompositeKeyResult>    std_lt;
-    std::greater<CompositeKeyResult> std_gt;
-#endif
+    std::less<CompositeKeyResult>                    std_lt;
+    std::greater<CompositeKeyResult>                 std_gt;
 
     return  (x< y) && !(y< x)&&
            !(x> y) &&  (y> x)&&
            !(x>=y) &&  (y>=x)&&
             (x<=y) && !(y<=x)&&
-
            lt(x,y) && !lt(y,x)&&
-          !gt(x,y) &&  gt(y,x)
-          
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-                   &&
+          !gt(x,y) &&  gt(y,x)&&
        std_lt(x,y) && !std_lt(y,x)&&
-      !std_gt(x,y) &&  std_gt(y,x)
-#endif
-                    ;
+      !std_gt(x,y) &&  std_gt(y,x);
   }
 
   static bool is_greater(const CompositeKeyResult& x,const T2& y)
   {
     composite_key_result_less<CompositeKeyResult>    lt;
     composite_key_result_greater<CompositeKeyResult> gt;
-
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-    std::less<CompositeKeyResult>    std_lt;
-    std::greater<CompositeKeyResult> std_gt;
-#endif
+    std::less<CompositeKeyResult>                    std_lt;
+    std::greater<CompositeKeyResult>                 std_gt;
 
     return !(x< y) &&  (y< x)&&
             (x> y) && !(y> x)&&
             (x>=y) && !(y>=x)&&
            !(x<=y) &&  (y<=x)&&
-
           !lt(x,y) &&  lt(y,x)&&
-           gt(x,y) && !gt(y,x)
-
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-                   &&
+           gt(x,y) && !gt(y,x)&&
       !std_lt(x,y) && std_lt(y,x)&&
-       std_gt(x,y) && !std_gt(y,x)
-#endif
-                    ;
+       std_gt(x,y) && !std_gt(y,x);
   }
 
   static bool is_equiv(const CompositeKeyResult& x,const T2& y)
   {
     composite_key_result_less<CompositeKeyResult>    lt;
     composite_key_result_greater<CompositeKeyResult> gt;
-
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-    std::less<CompositeKeyResult>    std_lt;
-    std::greater<CompositeKeyResult> std_gt;
-#endif
+    std::less<CompositeKeyResult>                    std_lt;
+    std::greater<CompositeKeyResult>                 std_gt;
 
     return !(x< y) && !(y< x)&&
            !(x> y) && !(y> x)&&
             (x>=y) &&  (y>=x)&&
             (x<=y) &&  (y<=x)&&
-
           !lt(x,y) && !lt(y,x)&&
-          !gt(x,y) && !gt(y,x)
-
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-                   &&
+          !gt(x,y) && !gt(y,x)&&
       !std_lt(x,y) && !std_lt(y,x)&&
-      !std_gt(x,y) && !std_gt(y,x)
-#endif
-                    ;
+      !std_gt(x,y) && !std_gt(y,x);
   }
 };
 
@@ -355,12 +301,7 @@ void test_composite_key()
   typedef multi_index_container<
     xyz,
     indexed_by<
-      ordered_unique<
-        ckey_t1
-#if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-        ,composite_key_result_less<ckey_t1::result_type>
-#endif
-      >
+      ordered_unique<ckey_t1>
     >
   > indexed_t1;
 
@@ -374,22 +315,22 @@ void test_composite_key()
   mc1.insert(xyz(1,1,0));
   mc1.insert(xyz(1,1,1));
 
-  BOOST_CHECK(mc1.size()==8);
-  BOOST_CHECK(
+  BOOST_TEST(mc1.size()==8);
+  BOOST_TEST(
     std::distance(
       mc1.find(mc1.key_extractor()(xyz(0,0,0))),
       mc1.find(mc1.key_extractor()(xyz(1,0,0))))==4);
-  BOOST_CHECK(
+  BOOST_TEST(
     std::distance(
       mc1.find(make_tuple(0,0,0)),
       mc1.find(make_tuple(1,0,0)))==4);
-  BOOST_CHECK(
+  BOOST_TEST(
     std::distance(
       mc1.lower_bound(make_tuple(0,0)),
       mc1.upper_bound(make_tuple(1,0)))==6);
 
 #if !defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
-  BOOST_CHECK(
+  BOOST_TEST(
     std::distance(
       mc1.lower_bound(1),
       mc1.upper_bound(1))==4);
@@ -409,20 +350,20 @@ void test_composite_key()
   get<2>(ck4.key_extractors())=
     get<2>(ck2.key_extractors());
 
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),ck2(xyz(0,0,0))));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,1)),ck2(xyz(0,1,0))));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,1)),ck2(xyz(0,0,0))));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),ck2(xyz(0,0,0))));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,1)),ck2(xyz(0,1,0))));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,1)),ck2(xyz(0,0,0))));
 
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0)));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),make_tuple(1)));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),make_tuple(-1)));
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0)));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),make_tuple(0,1)));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),make_tuple(0,-1)));
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0,0)));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),make_tuple(0,0,1)));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),make_tuple(0,0,-1)));
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0,0,1)));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0)));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),make_tuple(1)));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),make_tuple(-1)));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0)));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),make_tuple(0,1)));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),make_tuple(0,-1)));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0,0)));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),make_tuple(0,0,1)));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),make_tuple(0,0,-1)));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0,0,1)));
 
   typedef composite_key_result_less<ckey_t1::result_type>     ckey_comp_t1;
   typedef composite_key_result_equal_to<ckey_t1::result_type> ckey_eq_t1;
@@ -430,44 +371,44 @@ void test_composite_key()
   ckey_comp_t1 cp1;
   ckey_eq_t1   eq1;
 
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),ck2(xyz(0,0,0)),cp1,eq1));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,1)),ck2(xyz(0,1,0)),cp1,eq1));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,1)),ck2(xyz(0,0,0)),cp1,eq1));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),ck2(xyz(0,0,0)),cp1,eq1));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,1)),ck2(xyz(0,1,0)),cp1,eq1));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,1)),ck2(xyz(0,0,0)),cp1,eq1));
 
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0),cp1));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),make_tuple(1),cp1));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),make_tuple(-1),cp1));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0),cp1));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),make_tuple(1),cp1));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),make_tuple(-1),cp1));
 
 #if !defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),0,cp1));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),1,cp1));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),-1,cp1));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),0,cp1));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),1,cp1));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),-1,cp1));
 #endif
 
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0),cp1));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),make_tuple(0,1),cp1));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),make_tuple(0,-1),cp1));
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0,0),cp1,eq1));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),make_tuple(0,0,1),cp1,eq1));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),make_tuple(0,0,-1),cp1,eq1));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0),cp1));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),make_tuple(0,1),cp1));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),make_tuple(0,-1),cp1));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0,0),cp1,eq1));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),make_tuple(0,0,1),cp1,eq1));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),make_tuple(0,0,-1),cp1,eq1));
 
   typedef composite_key_result_greater<ckey_t1::result_type> ckey_comp_t2;
 
   ckey_comp_t2 cp2;
 
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),ck2(xyz(0,0,0)),cp2));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,1)),ck2(xyz(0,1,0)),cp2));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,1)),ck2(xyz(0,0,0)),cp2));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),ck2(xyz(0,0,0)),cp2));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,1)),ck2(xyz(0,1,0)),cp2));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,1)),ck2(xyz(0,0,0)),cp2));
 
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0),cp2));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),make_tuple(1),cp2));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),make_tuple(-1),cp2));
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0),cp2));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),make_tuple(0,1),cp2));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),make_tuple(0,-1),cp2));
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0,0),cp2));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),make_tuple(0,0,1),cp2));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),make_tuple(0,0,-1),cp2));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0),cp2));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),make_tuple(1),cp2));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),make_tuple(-1),cp2));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0),cp2));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),make_tuple(0,1),cp2));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),make_tuple(0,-1),cp2));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0,0),cp2));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),make_tuple(0,0,1),cp2));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),make_tuple(0,0,-1),cp2));
 
   typedef composite_key_equal_to<
     modulo_equal,
@@ -490,31 +431,31 @@ void test_composite_key()
   eq3=eq4; /* prevent unused var */
   eq4=eq3; /* prevent unused var */
 
-  BOOST_CHECK( eq2(ck1(xyz(0,0,0)),ck1(xyz(0,0,0))));
-  BOOST_CHECK(!eq2(ck1(xyz(0,1,0)),ck1(xyz(0,0,0))));
-  BOOST_CHECK(!eq2(ck1(xyz(0,2,0)),ck1(xyz(0,0,0))));
-  BOOST_CHECK( eq2(ck1(xyz(0,3,0)),ck1(xyz(0,0,0))));
-  BOOST_CHECK(!eq2(ck1(xyz(1,0,0)),ck1(xyz(0,0,0))));
-  BOOST_CHECK(!eq2(ck1(xyz(1,1,0)),ck1(xyz(0,0,0))));
-  BOOST_CHECK(!eq2(ck1(xyz(1,2,0)),ck1(xyz(0,0,0))));
-  BOOST_CHECK(!eq2(ck1(xyz(1,3,0)),ck1(xyz(0,0,0))));
-  BOOST_CHECK( eq2(ck1(xyz(2,0,0)),ck1(xyz(0,0,0))));
-  BOOST_CHECK(!eq2(ck1(xyz(2,1,0)),ck1(xyz(0,0,0))));
-  BOOST_CHECK(!eq2(ck1(xyz(2,2,0)),ck1(xyz(0,0,0))));
-  BOOST_CHECK( eq2(ck1(xyz(2,3,0)),ck1(xyz(0,0,0))));
+  BOOST_TEST( eq2(ck1(xyz(0,0,0)),ck1(xyz(0,0,0))));
+  BOOST_TEST(!eq2(ck1(xyz(0,1,0)),ck1(xyz(0,0,0))));
+  BOOST_TEST(!eq2(ck1(xyz(0,2,0)),ck1(xyz(0,0,0))));
+  BOOST_TEST( eq2(ck1(xyz(0,3,0)),ck1(xyz(0,0,0))));
+  BOOST_TEST(!eq2(ck1(xyz(1,0,0)),ck1(xyz(0,0,0))));
+  BOOST_TEST(!eq2(ck1(xyz(1,1,0)),ck1(xyz(0,0,0))));
+  BOOST_TEST(!eq2(ck1(xyz(1,2,0)),ck1(xyz(0,0,0))));
+  BOOST_TEST(!eq2(ck1(xyz(1,3,0)),ck1(xyz(0,0,0))));
+  BOOST_TEST( eq2(ck1(xyz(2,0,0)),ck1(xyz(0,0,0))));
+  BOOST_TEST(!eq2(ck1(xyz(2,1,0)),ck1(xyz(0,0,0))));
+  BOOST_TEST(!eq2(ck1(xyz(2,2,0)),ck1(xyz(0,0,0))));
+  BOOST_TEST( eq2(ck1(xyz(2,3,0)),ck1(xyz(0,0,0))));
 
-  BOOST_CHECK( eq2(make_tuple(0,0,0),ck1(xyz(0,0,0))));
-  BOOST_CHECK(!eq2(ck1(xyz(0,1,0))  ,make_tuple(0,0,0)));
-  BOOST_CHECK(!eq2(make_tuple(0,2,0),ck1(xyz(0,0,0))));
-  BOOST_CHECK( eq2(ck1(xyz(0,3,0))  ,make_tuple(0,0,0)));
-  BOOST_CHECK(!eq2(make_tuple(1,0,0),ck1(xyz(0,0,0))));
-  BOOST_CHECK(!eq2(ck1(xyz(1,1,0))  ,make_tuple(0,0,0)));
-  BOOST_CHECK(!eq2(make_tuple(1,2,0),ck1(xyz(0,0,0))));
-  BOOST_CHECK(!eq2(ck1(xyz(1,3,0))  ,make_tuple(0,0,0)));
-  BOOST_CHECK( eq2(make_tuple(2,0,0),ck1(xyz(0,0,0))));
-  BOOST_CHECK(!eq2(ck1(xyz(2,1,0))  ,make_tuple(0,0,0)));
-  BOOST_CHECK(!eq2(make_tuple(2,2,0),ck1(xyz(0,0,0))));
-  BOOST_CHECK( eq2(ck1(xyz(2,3,0))  ,make_tuple(0,0,0)));
+  BOOST_TEST( eq2(make_tuple(0,0,0),ck1(xyz(0,0,0))));
+  BOOST_TEST(!eq2(ck1(xyz(0,1,0))  ,make_tuple(0,0,0)));
+  BOOST_TEST(!eq2(make_tuple(0,2,0),ck1(xyz(0,0,0))));
+  BOOST_TEST( eq2(ck1(xyz(0,3,0))  ,make_tuple(0,0,0)));
+  BOOST_TEST(!eq2(make_tuple(1,0,0),ck1(xyz(0,0,0))));
+  BOOST_TEST(!eq2(ck1(xyz(1,1,0))  ,make_tuple(0,0,0)));
+  BOOST_TEST(!eq2(make_tuple(1,2,0),ck1(xyz(0,0,0))));
+  BOOST_TEST(!eq2(ck1(xyz(1,3,0))  ,make_tuple(0,0,0)));
+  BOOST_TEST( eq2(make_tuple(2,0,0),ck1(xyz(0,0,0))));
+  BOOST_TEST(!eq2(ck1(xyz(2,1,0))  ,make_tuple(0,0,0)));
+  BOOST_TEST(!eq2(make_tuple(2,2,0),ck1(xyz(0,0,0))));
+  BOOST_TEST( eq2(ck1(xyz(2,3,0))  ,make_tuple(0,0,0)));
 
   typedef composite_key_compare<
     std::less<int>,
@@ -535,19 +476,19 @@ void test_composite_key()
   cp5=cp6; /* prevent unused var */
   cp6=cp4; /* prevent unused var */
 
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),ck2(xyz(0,0,0)),cp3));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,1)),ck2(xyz(0,1,0)),cp3));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,1)),ck2(xyz(0,0,0)),cp3));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),ck2(xyz(0,0,0)),cp3));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,1)),ck2(xyz(0,1,0)),cp3));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,1)),ck2(xyz(0,0,0)),cp3));
 
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0),cp3));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),make_tuple(1),cp3));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),make_tuple(-1),cp3));
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0),cp3));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),make_tuple(0,-1),cp3));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),make_tuple(0,1),cp3));
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0,0),cp3));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),make_tuple(0,0,1),cp3));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),make_tuple(0,0,-1),cp3));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0),cp3));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),make_tuple(1),cp3));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),make_tuple(-1),cp3));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0),cp3));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),make_tuple(0,-1),cp3));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),make_tuple(0,1),cp3));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,0)),make_tuple(0,0,0),cp3));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),make_tuple(0,0,1),cp3));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),make_tuple(0,0,-1),cp3));
 
   typedef composite_key<
     xyz,
@@ -557,32 +498,26 @@ void test_composite_key()
 
   ckey_t2 ck5;
 
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,1)),ck5(xyz(0,0,0))));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),ck5(xyz(-1,1,0))));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),ck5(xyz(1,-1,0))));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,1)),ck5(xyz(0,0,0))));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),ck5(xyz(-1,1,0))));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),ck5(xyz(1,-1,0))));
 
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,1)),ck5(xyz(0,0,0)),cp1));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),ck5(xyz(-1,1,0)),cp1));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),ck5(xyz(1,-1,0)),cp1));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,1)),ck5(xyz(0,0,0)),cp1));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),ck5(xyz(-1,1,0)),cp1));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),ck5(xyz(1,-1,0)),cp1));
 
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,1)),ck5(xyz(0,0,0)),cp2));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),ck5(xyz(-1,1,0)),cp2));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),ck5(xyz(1,-1,0)),cp2));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,1)),ck5(xyz(0,0,0)),cp2));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),ck5(xyz(-1,1,0)),cp2));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),ck5(xyz(1,-1,0)),cp2));
 
-  BOOST_CHECK(is_equiv  (ck1(xyz(0,0,1)),ck5(xyz(0,0,0)),cp3));
-  BOOST_CHECK(is_less   (ck1(xyz(0,0,0)),ck5(xyz(-1,1,0)),cp3));
-  BOOST_CHECK(is_greater(ck1(xyz(0,0,0)),ck5(xyz(1,-1,0)),cp3));
+  BOOST_TEST(is_equiv  (ck1(xyz(0,0,1)),ck5(xyz(0,0,0)),cp3));
+  BOOST_TEST(is_less   (ck1(xyz(0,0,0)),ck5(xyz(-1,1,0)),cp3));
+  BOOST_TEST(is_greater(ck1(xyz(0,0,0)),ck5(xyz(1,-1,0)),cp3));
 
   typedef multi_index_container<
     xyz,
     indexed_by<
-      hashed_unique<
-        ckey_t1
-#if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-        ,composite_key_result_hash<ckey_t1::result_type>
-        ,composite_key_result_equal_to<ckey_t1::result_type>
-#endif
-      >
+      hashed_unique<ckey_t1>
     >
   > indexed_t2;
 
@@ -604,9 +539,9 @@ void test_composite_key()
   mc2.insert(xyz(1,1,0));
   mc2.insert(xyz(1,1,1));
 
-  BOOST_CHECK(mc2.size()==8);
-  BOOST_CHECK(mc2.find(make_tuple(0,0,1))->z==1);
-  BOOST_CHECK(ck1(*(mc2.find(make_tuple(1,0,1))))==make_tuple(1,0,1));
+  BOOST_TEST(mc2.size()==8);
+  BOOST_TEST(mc2.find(make_tuple(0,0,1))->z==1);
+  BOOST_TEST(ck1(*(mc2.find(make_tuple(1,0,1))))==make_tuple(1,0,1));
 
   typedef composite_key<
     xystr,
@@ -636,10 +571,10 @@ void test_composite_key()
   ch3=ch4; /* prevent unused var */
   ch4=ch2; /* prevent unused var */
 
-  BOOST_CHECK(
+  BOOST_TEST(
     ch1(ck6(xystr(0,0,"hello")))==
     ch1(boost::make_tuple(std::string("hello"),0,0)));
-  BOOST_CHECK(
+  BOOST_TEST(
     ch1(ck6(xystr(4,5,"world")))==
     ch1(boost::make_tuple(std::string("world"),4,5)));
 
@@ -647,8 +582,8 @@ void test_composite_key()
 
   ckeyres_hash_t crh;
 
-  BOOST_CHECK(
+  BOOST_TEST(
     ch1(ck6(xystr(0,0,"hello")))==crh(ck6(xystr(0,0,"hello"))));
-  BOOST_CHECK(
+  BOOST_TEST(
     ch1(ck6(xystr(4,5,"world")))==crh(ck6(xystr(4,5,"world"))));
 }

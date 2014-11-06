@@ -1,7 +1,7 @@
 #include <boost/container/detail/config_begin.hpp>
 #include <memory>
 
-#include <boost/move/move.hpp>
+#include <boost/move/utility.hpp>
 #include <boost/container/vector.hpp>
 #include <boost/container/deque.hpp>
 #include <boost/container/list.hpp>
@@ -20,8 +20,6 @@ class SimpleAllocator
 {
 public:
 	typedef Ty value_type;
-	typedef typename std::allocator<Ty>::pointer pointer;
-	typedef typename std::allocator<Ty>::size_type size_type;
 
 	SimpleAllocator(int value)
 		: m_state(value)
@@ -32,12 +30,12 @@ public:
 		: m_state(other.m_state)
 	{}
 
-	pointer allocate(size_type n)
+	Ty* allocate(std::size_t n)
 	{
 		return m_allocator.allocate(n);
 	}
 
-	void deallocate(pointer p, size_type n)
+	void deallocate(Ty* p, std::size_t n)
 	{
 		m_allocator.deallocate(p, n);
 	}
@@ -116,9 +114,9 @@ typedef multiset<alloc_int, std::less<alloc_int>, AllocIntAllocator> MultiSet;
 //[multi]flat_map/set
 typedef std::pair<alloc_int, alloc_int> FlatMapNode;
 typedef scoped_allocator_adaptor<SimpleAllocator<FlatMapNode> > FlatMapAllocator;
-typedef flat_map<alloc_int, alloc_int, std::less<alloc_int>, MapAllocator> FlatMap;
+typedef flat_map<alloc_int, alloc_int, std::less<alloc_int>, FlatMapAllocator> FlatMap;
 typedef flat_set<alloc_int, std::less<alloc_int>, AllocIntAllocator> FlatSet;
-typedef flat_multimap<alloc_int, alloc_int, std::less<alloc_int>, MapAllocator> FlatMultiMap;
+typedef flat_multimap<alloc_int, alloc_int, std::less<alloc_int>, FlatMapAllocator> FlatMultiMap;
 typedef flat_multiset<alloc_int, std::less<alloc_int>, AllocIntAllocator> FlatMultiSet;
 
 //vector, deque, list, slist, stable_vector.
@@ -240,7 +238,7 @@ struct container_wrapper
    : public Container
 {
    typedef typename Container::allocator_type   allocator_type;
-  
+
    container_wrapper(const allocator_type &a)
       : Container(a)
    {}

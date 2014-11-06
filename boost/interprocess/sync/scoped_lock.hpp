@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2011. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -16,7 +16,7 @@
 #ifndef BOOST_INTERPROCESS_SCOPED_LOCK_HPP
 #define BOOST_INTERPROCESS_SCOPED_LOCK_HPP
 
-#if (defined _MSC_VER) && (_MSC_VER >= 1200)
+#if defined(_MSC_VER)
 #  pragma once
 #endif
 
@@ -157,7 +157,7 @@ class scoped_lock
    //!   a)if try_unlock_upgradable_and_lock() returns true then mutex() obtains
    //!      the value from upgr.release() and owns() is set to true.
    //!   b)if try_unlock_upgradable_and_lock() returns false then upgr is
-   //!      unaffected and this scoped_lock construction as the same effects as 
+   //!      unaffected and this scoped_lock construction as the same effects as
    //!      a default construction.
    //!   c)Else upgr.owns() is false. mutex() obtains the value from upgr.release()
    //!      and owns() is set to false
@@ -259,7 +259,7 @@ class scoped_lock
    //!   mutex after the assignment (and scop will not), but the mutex's lock
    //!   count will be decremented by one.
    scoped_lock &operator=(BOOST_RV_REF(scoped_lock) scop)
-   { 
+   {
       if(this->owns())
          this->unlock();
       m_locked = scop.owns();

@@ -1,4 +1,4 @@
-//  This file was automatically generated on Tue Jul 10 14:57:46 2012
+//  This file was automatically generated on Wed May 28 17:13:04 2014
 //  by libs/config/tools/generate.cpp
 //  Copyright John Maddock 2002-4.
 //  Use, modification and distribution are subject to the 
@@ -6,7 +6,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 //  See http://www.boost.org/libs/config for the most recent version.//
-//  Revision $Id: config_test.cpp 79537 2012-07-15 15:59:05Z marshall $
+//  Revision $Id$
 //
 
 // Test file for config setup
@@ -102,6 +102,16 @@ namespace boost_no_cwchar = empty_boost;
 #else
 namespace boost_no_cwctype = empty_boost;
 #endif
+#ifndef BOOST_NO_CXX11_ADDRESSOF
+#include "boost_no_cxx11_addressof.ipp"
+#else
+namespace boost_no_cxx11_addressof = empty_boost;
+#endif
+#ifndef BOOST_NO_CXX11_ALIGNAS
+#include "boost_no_cxx11_alignas.ipp"
+#else
+namespace boost_no_cxx11_alignas = empty_boost;
+#endif
 #ifndef BOOST_NO_CXX11_ALLOCATOR
 #include "boost_no_cxx11_allocator.ipp"
 #else
@@ -116,6 +126,11 @@ namespace boost_no_cxx11_atomic_smart_ptr = empty_boost;
 #include "boost_no_cxx11_hdr_array.ipp"
 #else
 namespace boost_no_cxx11_hdr_array = empty_boost;
+#endif
+#ifndef BOOST_NO_CXX11_HDR_ATOMIC
+#include "boost_no_cxx11_hdr_atomic.ipp"
+#else
+namespace boost_no_cxx11_hdr_atomic = empty_boost;
 #endif
 #ifndef BOOST_NO_CXX11_HDR_CHRONO
 #include "boost_no_cxx11_hdr_chrono.ipp"
@@ -202,10 +217,40 @@ namespace boost_no_cxx11_hdr_unordered_map = empty_boost;
 #else
 namespace boost_no_cxx11_hdr_unordered_set = empty_boost;
 #endif
+#ifndef BOOST_NO_CXX11_INLINE_NAMESPACES
+#include "boost_no_cxx11_inline_namespaces.ipp"
+#else
+namespace boost_no_cxx11_inline_namespaces = empty_boost;
+#endif
+#ifndef BOOST_NO_CXX11_NUMERIC_LIMITS
+#include "boost_no_cxx11_numeric_limits.ipp"
+#else
+namespace boost_no_cxx11_numeric_limits = empty_boost;
+#endif
+#ifndef BOOST_NO_CXX11_REF_QUALIFIERS
+#include "boost_no_cxx11_ref_qualifiers.ipp"
+#else
+namespace boost_no_cxx11_ref_qualifiers = empty_boost;
+#endif
 #ifndef BOOST_NO_CXX11_SMART_PTR
 #include "boost_no_cxx11_smart_ptr.ipp"
 #else
 namespace boost_no_cxx11_smart_ptr = empty_boost;
+#endif
+#ifndef BOOST_NO_CXX11_STD_ALIGN
+#include "boost_no_cxx11_std_align.ipp"
+#else
+namespace boost_no_cxx11_std_align = empty_boost;
+#endif
+#ifndef BOOST_NO_CXX11_TRAILING_RESULT_TYPES
+#include "boost_no_cxx11_trailing_result_types.ipp"
+#else
+namespace boost_no_cxx11_trailing_result_types = empty_boost;
+#endif
+#ifndef BOOST_NO_CXX11_USER_DEFINED_LITERALS
+#include "boost_no_cxx11_user_lit.ipp"
+#else
+namespace boost_no_cxx11_user_defined_literals = empty_boost;
 #endif
 #ifndef BOOST_NO_CXX11_HDR_FUNCTIONAL
 #include "boost_no_cxx_hdr_functional.ipp"
@@ -341,11 +386,6 @@ namespace boost_no_limits = empty_boost;
 #include "boost_no_limits_const_exp.ipp"
 #else
 namespace boost_no_limits_compile_time_constants = empty_boost;
-#endif
-#ifndef BOOST_NO_CXX11_NUMERIC_LIMITS
-#include "boost_no_cxx11_numeric_limits.ipp"
-#else
-namespace boost_no_cxx11_numeric_limits = empty_boost;
 #endif
 #ifndef BOOST_NO_LONG_LONG_NUMERIC_LIMITS
 #include "boost_no_ll_limits.ipp"
@@ -522,11 +562,6 @@ namespace boost_no_std_output_iterator_assign = empty_boost;
 #else
 namespace boost_no_std_typeinfo = empty_boost;
 #endif
-#ifndef BOOST_NO_STD_UNORDERED
-#include "boost_no_std_unordered.ipp"
-#else
-namespace boost_no_std_unordered = empty_boost;
-#endif
 #ifndef BOOST_NO_STD_USE_FACET
 #include "boost_no_std_use_facet.ipp"
 #else
@@ -672,6 +707,11 @@ namespace boost_has_gettimeofday = empty_boost;
 #include "boost_has_hash.ipp"
 #else
 namespace boost_has_hash = empty_boost;
+#endif
+#ifdef BOOST_HAS_INT128
+#include "boost_has_int128.ipp"
+#else
+namespace boost_has_int128 = empty_boost;
 #endif
 #ifdef BOOST_HAS_LOG1P
 #include "boost_has_log1p.ipp"
@@ -929,6 +969,11 @@ int main( int, char *[] )
    if(0 != boost_has_hash::test())
    {
       std::cerr << "Failed test for BOOST_HAS_HASH at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
+   if(0 != boost_has_int128::test())
+   {
+      std::cerr << "Failed test for BOOST_HAS_INT128 at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
    if(0 != boost_has_log1p::test())
@@ -1221,6 +1266,16 @@ int main( int, char *[] )
       std::cerr << "Failed test for BOOST_NO_CWCTYPE at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
+   if(0 != boost_no_cxx11_addressof::test())
+   {
+      std::cerr << "Failed test for BOOST_NO_CXX11_ADDRESSOF at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
+   if(0 != boost_no_cxx11_alignas::test())
+   {
+      std::cerr << "Failed test for BOOST_NO_CXX11_ALIGNAS at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
    if(0 != boost_no_cxx11_allocator::test())
    {
       std::cerr << "Failed test for BOOST_NO_CXX11_ALLOCATOR at: " << __FILE__ << ":" << __LINE__ << std::endl;
@@ -1234,6 +1289,11 @@ int main( int, char *[] )
    if(0 != boost_no_cxx11_hdr_array::test())
    {
       std::cerr << "Failed test for BOOST_NO_CXX11_HDR_ARRAY at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
+   if(0 != boost_no_cxx11_hdr_atomic::test())
+   {
+      std::cerr << "Failed test for BOOST_NO_CXX11_HDR_ATOMIC at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
    if(0 != boost_no_cxx11_hdr_chrono::test())
@@ -1321,9 +1381,39 @@ int main( int, char *[] )
       std::cerr << "Failed test for BOOST_NO_CXX11_HDR_UNORDERED_SET at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
+   if(0 != boost_no_cxx11_inline_namespaces::test())
+   {
+      std::cerr << "Failed test for BOOST_NO_CXX11_INLINE_NAMESPACES at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
+   if(0 != boost_no_cxx11_numeric_limits::test())
+   {
+      std::cerr << "Failed test for BOOST_NO_CXX11_NUMERIC_LIMITS at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
+   if(0 != boost_no_cxx11_ref_qualifiers::test())
+   {
+      std::cerr << "Failed test for BOOST_NO_CXX11_REF_QUALIFIERS at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
    if(0 != boost_no_cxx11_smart_ptr::test())
    {
       std::cerr << "Failed test for BOOST_NO_CXX11_SMART_PTR at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
+   if(0 != boost_no_cxx11_std_align::test())
+   {
+      std::cerr << "Failed test for BOOST_NO_CXX11_STD_ALIGN at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
+   if(0 != boost_no_cxx11_trailing_result_types::test())
+   {
+      std::cerr << "Failed test for BOOST_NO_CXX11_TRAILING_RESULT_TYPES at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
+   if(0 != boost_no_cxx11_user_defined_literals::test())
+   {
+      std::cerr << "Failed test for BOOST_NO_CXX11_USER_DEFINED_LITERALS at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
    if(0 != boost_no_cxx11_hdr_functional::test())
@@ -1459,11 +1549,6 @@ int main( int, char *[] )
    if(0 != boost_no_limits_compile_time_constants::test())
    {
       std::cerr << "Failed test for BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS at: " << __FILE__ << ":" << __LINE__ << std::endl;
-      ++error_count;
-   }
-   if(0 != boost_no_cxx11_numeric_limits::test())
-   {
-      std::cerr << "Failed test for BOOST_NO_CXX11_NUMERIC_LIMITS at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
    if(0 != boost_no_long_long_numeric_limits::test())
@@ -1639,11 +1724,6 @@ int main( int, char *[] )
    if(0 != boost_no_std_typeinfo::test())
    {
       std::cerr << "Failed test for BOOST_NO_STD_TYPEINFO at: " << __FILE__ << ":" << __LINE__ << std::endl;
-      ++error_count;
-   }
-   if(0 != boost_no_std_unordered::test())
-   {
-      std::cerr << "Failed test for BOOST_NO_STD_UNORDERED at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
    if(0 != boost_no_std_use_facet::test())

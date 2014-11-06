@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2011. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2012. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -11,7 +11,7 @@
 #ifndef BOOST_INTERPROCESS_MANAGED_HEAP_MEMORY_HPP
 #define BOOST_INTERPROCESS_MANAGED_HEAP_MEMORY_HPP
 
-#if (defined _MSC_VER) && (_MSC_VER >= 1200)
+#if defined(_MSC_VER)
 #  pragma once
 #endif
 
@@ -24,7 +24,7 @@
 #include <boost/detail/no_exceptions_support.hpp>
 //These includes needed to fulfill default template parameters of
 //predeclarations in interprocess_fwd.hpp
-#include <boost/interprocess/mem_algo/rbtree_best_fit.hpp> 
+#include <boost/interprocess/mem_algo/rbtree_best_fit.hpp>
 #include <boost/interprocess/sync/mutex_family.hpp>
 #include <boost/interprocess/indexes/iset_index.hpp>
 
@@ -99,7 +99,7 @@ class basic_managed_heap_memory
    //!have some extra bytes to allocate new objects. If returns
    //!false, the heap allocation has failed.
    bool grow(size_type extra_bytes)
-   { 
+   {
       //If memory is reallocated, data will
       //be automatically copied
       BOOST_TRY{
@@ -129,7 +129,7 @@ class basic_managed_heap_memory
    private:
    //!Frees resources. Never throws.
    void priv_close()
-   { 
+   {
       base_t::destroy_impl();
       std::vector<char>().swap(m_heapmem);
    }
