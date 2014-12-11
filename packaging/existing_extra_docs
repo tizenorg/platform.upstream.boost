@@ -23,15 +23,12 @@ libs/concept_check/stl_concept_check.cpp
 libs/concept_check/stl_concept_covering.cpp
 libs/config/test/limits_test.cpp
 libs/config/tools/configure.in
-libs/conversion/cast_test.cpp
-libs/conversion/lexical_cast_test.cpp
 libs/crc/crc_example.cpp
 libs/filesystem/build/Jamfile.v2
 libs/filesystem/example/simple_ls.cpp
 libs/filesystem/test/fstream_test.cpp
 libs/filesystem/test/operations_test.cpp
 libs/filesystem/test/path_test.cpp
-libs/filesystem/test/wide_test.cpp
 libs/format/example/sample_advanced.cpp
 libs/format/example/sample_formats.cpp
 libs/format/example/sample_new_features.cpp
@@ -95,7 +92,6 @@ libs/graph/example/sloan_ordering.cpp
 libs/graph/example/strong_components.cpp
 libs/graph/example/transitive_closure.cpp
 libs/graph/example/transpose-example.cpp
-libs/graph/example/undirected.cpp
 libs/graph/example/undirected_dfs.cpp
 libs/graph/test/dominator_tree_test.cpp
 libs/graph/test/graph.cpp
@@ -304,10 +300,6 @@ libs/python/test/pickle3.cpp
 libs/python/test/pickle4.cpp
 libs/python/test/vector_indexing_suite.cpp
 libs/python/test/vector_indexing_suite.py
-libs/random/nondet_random_speed.cpp
-libs/random/random_demo.cpp
-libs/random/random_speed.cpp
-libs/random/random_test.cpp
 libs/range/test/algorithm_example.cpp
 libs/range/test/array.cpp
 libs/range/test/iterator_pair.cpp
@@ -448,11 +440,9 @@ libs/type_traits/examples/copy_example.cpp
 libs/type_traits/examples/fill_example.cpp
 libs/type_traits/examples/iter_swap_example.cpp
 libs/type_traits/examples/trivial_destructor_example.cpp
-libs/utility/addressof_test.cpp
 libs/utility/base_from_member_test.cpp
 libs/utility/call_traits_test.cpp
 libs/utility/iterators_test.cpp
-libs/utility/noncopyable_test.cpp
 libs/utility/operators_test.cpp
 libs/utility/shared_iterator_example1.cpp
 libs/utility/shared_iterator_example2.cpp
@@ -460,7 +450,6 @@ libs/utility/shared_iterator_example3.cpp
 libs/wave/ChangeLog
 LICENSE_1_0.txt
 more/blanket-permission.txt
-tools/build/v2/hacking.txt
 tools/inspect/build/Jamfile.v2
 tools/inspect/inspect.cpp
 tools/inspect/inspector.hpp
