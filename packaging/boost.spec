@@ -429,7 +429,9 @@ EOF
 
 # perform the compilation
 ./b2 %{?_smp_mflags} --prefix=%{_prefix} --libdir=%{_libdir} \
-	--user-config=./user-config.jam
+	--user-config=./user-config.jam ${CFLAGS:+cflags="$CFLAGS"} \
+    ${CXXFLAGS:+cxxflags="$CXXFLAGS"} ${LDFLAGS:+linkflags="$LDFLAGS"}
+
 
 %if %build_docs
 cd doc
