@@ -25,14 +25,14 @@
 #include <boost/static_assert.hpp>
 
 #if defined BOOST_THREAD_PROVIDES_FUTURE_CTOR_ALLOCATORS
-#include <libs/thread/test/sync/futures/test_allocator.hpp>
+#include "../test_allocator.hpp"
 
 int main()
 {
 
-  BOOST_STATIC_ASSERT_MSG((boost::uses_allocator<boost::promise<int>, test_allocator<int> >::value), "");
-  BOOST_STATIC_ASSERT_MSG((boost::uses_allocator<boost::promise<int&>, test_allocator<int&> >::value), "");
-  BOOST_STATIC_ASSERT_MSG((boost::uses_allocator<boost::promise<void>, test_allocator<void> >::value), "");
+  BOOST_STATIC_ASSERT_MSG((boost::csbl::uses_allocator<boost::promise<int>, test_allocator<int> >::value), "");
+  BOOST_STATIC_ASSERT_MSG((boost::csbl::uses_allocator<boost::promise<int&>, test_allocator<int&> >::value), "");
+  BOOST_STATIC_ASSERT_MSG((boost::csbl::uses_allocator<boost::promise<void>, test_allocator<void> >::value), "");
 
   return boost::report_errors();
 }

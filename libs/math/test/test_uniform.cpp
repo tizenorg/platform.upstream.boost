@@ -16,14 +16,17 @@
 #endif
 
 #include <boost/math/concepts/real_concept.hpp> // for real_concept
-#include <boost/test/test_exec_monitor.hpp> // Boost.Test
+#define BOOST_TEST_MAIN
+#include <boost/test/unit_test.hpp> // Boost.Test
 #include <boost/test/floating_point_comparison.hpp>
 
 #include <boost/math/distributions/uniform.hpp>
     using boost::math::uniform_distribution;
 #include <boost/math/tools/test.hpp> 
+#include "test_out_of_range.hpp"
 
 #include <iostream>
+#include <iomanip>
    using std::cout;
    using std::endl;
    using std::setprecision;
@@ -337,7 +340,7 @@ void test_spots(RealType)
    else
    { // real_concept case, does has_infinfity == false, so can't check it throws.
      // cout << std::numeric_limits<RealType>::infinity() << ' '
-     // << boost::math::fpclassify(std::numeric_limits<RealType>::infinity()) << endl;
+     // << (boost::math::fpclassify)(std::numeric_limits<RealType>::infinity()) << endl;
      // value of std::numeric_limits<RealType>::infinity() is zero, so FPclassify is zero,
      // so (boost::math::isfinite)(std::numeric_limits<RealType>::infinity()) does not detect infinity.
      // so these tests would never throw.
@@ -367,9 +370,10 @@ void test_spots(RealType)
    BOOST_CHECK_THROW(uniform_distribution<RealType>(1, 0), std::domain_error); // lower > upper!
    BOOST_CHECK_THROW(uniform_distribution<RealType>(1, 1), std::domain_error); // lower == upper!
 
+   check_out_of_range<uniform_distribution<RealType> >(1, 5);
 } // template <class RealType>void test_spots(RealType)
 
-int test_main(int, char* [])
+BOOST_AUTO_TEST_CASE( test_main )
 {
   // Check that can construct uniform distribution using the two convenience methods:
   using namespace boost::math;
@@ -427,8 +431,8 @@ int test_main(int, char* [])
       "to pass.</note>" << std::cout;
 #endif
 
-   return 0;
-} // int test_main(int, char* [])
+   
+} // BOOST_AUTO_TEST_CASE( test_main )
 
 /*
 
