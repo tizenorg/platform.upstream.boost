@@ -69,6 +69,7 @@ Source0:        %{name}_%{file_version}.tar.bz2
 Source1:        boost-rpmlintrc
 Source4:        existing_extra_docs
 Source1001: 	boost.manifest
+Source1002:     boost.pc
 
 %define _docdir %{_datadir}/doc/packages/boost-%{version}
 
@@ -353,6 +354,7 @@ This package contains the Boost::Timer runtime library.
 %prep
 %setup -q -n %{name}_%{file_version}
 cp %{SOURCE1001} .
+cp %{SOURCE1002} .
 #everything in the tarball has the executable flag set ...
 find -type f ! \( -name \*.sh -o -name \*.py -o -name \*.pl \) -exec chmod -x {} +
 
@@ -469,6 +471,10 @@ for lib in ${blibs}; do
   ln -sf ${lib} $SONAME_MT
 done
 popd
+
+# install pkgconfig file
+mkdir -p $RPM_BUILD_ROOT%{_libdir}/pkgconfig
+install -D -m 644 %{SOURCE1002} $RPM_BUILD_ROOT%{_libdir}/pkgconfig
 
 # install the man pages
 # rm -rf doc/man/man3/boost::units::operator
@@ -713,6 +719,7 @@ rm -f %{buildroot}%{_libdir}/*.a
 %defattr(-, root, root, -)
 %{_includedir}/boost
 %{_libdir}/*.so
+%{_libdir}/pkgconfig/boost.pc
 #%%{_datadir}/aclocal/*.m4
 
 %files doc-html
