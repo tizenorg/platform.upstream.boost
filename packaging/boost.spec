@@ -515,6 +515,10 @@ rm -f %{buildroot}%{_libdir}/*.a
 #symlink dupes
 %fdupes %buildroot
 
+# LICENSE
+mkdir -p %{buildroot}/usr/share/licenses
+cp -af LICENSE_1_0.txt %{buildroot}/usr/share/licenses/%{name}
+
 %post -n libboost_atomic%{lib_appendix} -p /sbin/ldconfig
 %post -n libboost_container%{lib_appendix} -p /sbin/ldconfig
 %post -n libboost_context%{lib_appendix} -p /sbin/ldconfig
@@ -574,6 +578,10 @@ rm -f %{buildroot}%{_libdir}/*.a
 %if %build_mpi
 %postun -n libboost_graph_parallel%{lib_appendix} -p /sbin/ldconfig
 %endif
+
+%files
+%manifest %{name}.manifest
+%{_datadir}/licenses/%{name}
 
 %files -n boost-license%{lib_appendix}
 %manifest %{name}.manifest
