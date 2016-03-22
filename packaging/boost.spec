@@ -1,7 +1,13 @@
-%define ver 1.57.0
-%define file_version 1_57_0
-%define short_version 1_57
-%define lib_appendix 1_57_0
+%define run_tests 0
+%if %{run_tests}
+    # check is defined off at .rpmmacros file.
+    %define check %%check
+%endif
+
+%define ver 1.58.0
+%define file_version 1_58_0
+%define short_version 1_58
+%define lib_appendix 1_58_0
 
 #Only define to 1 to generate the man pages
 %define build_docs 0
@@ -28,21 +34,21 @@
 %define disable_long_double 0
 %endif
 
-%define boost_libs1 libboost_date_time%{lib_appendix} libboost_filesystem%{lib_appendix} libboost_graph%{lib_appendix}
-%define boost_libs2 libboost_iostreams%{lib_appendix} libboost_math%{lib_appendix} libboost_test%{lib_appendix}
-%define boost_libs3 libboost_program_options%{lib_appendix} libboost_python%{lib_appendix} libboost_serialization%{lib_appendix}
-%define boost_libs4 libboost_signals%{lib_appendix} libboost_system%{lib_appendix} libboost_thread%{lib_appendix}
-%define boost_libs5 libboost_wave%{lib_appendix} libboost_regex%{lib_appendix} libboost_regex%{lib_appendix}
-%define boost_libs6 libboost_random%{lib_appendix} libboost_chrono%{lib_appendix} libboost_locale%{lib_appendix}
-%define boost_libs7 libboost_timer%{lib_appendix} libboost_atomic%{lib_appendix} libboost_log%{lib_appendix} libboost_container%{lib_appendix}
+%define boost_libs1 boost-date-time%{lib_appendix} boost-filesystem%{lib_appendix} boost-graph%{lib_appendix}
+%define boost_libs2 boost-iostreams%{lib_appendix} boost-math%{lib_appendix} boost-test%{lib_appendix}
+%define boost_libs3 boost-program-options%{lib_appendix} boost-python%{lib_appendix} boost-serialization%{lib_appendix}
+%define boost_libs4 boost-signals%{lib_appendix} boost-system%{lib_appendix} boost-thread%{lib_appendix}
+%define boost_libs5 boost-wave%{lib_appendix} boost-regex%{lib_appendix}
+%define boost_libs6 boost-random%{lib_appendix} boost-chrono%{lib_appendix} boost-locale%{lib_appendix}
+%define boost_libs7 boost-timer%{lib_appendix} boost-atomic%{lib_appendix} boost-log%{lib_appendix} boost-container%{lib_appendix}
 %if %build_context
-%define boost_libs_context libboost_context%{lib_appendix} libboost_coroutine%{lib_appendix}
+%define boost_libs_context boost-context%{lib_appendix} boost-coroutine%{lib_appendix}
 %endif
 
 %define most_libs %boost_libs1 %boost_libs2 %boost_libs3 %boost_libs4 %boost_libs5 %boost_libs6 %boost_libs7 %{?boost_libs_context}
 
 %if %build_mpi
-%define all_libs %{most_libs} libboost_graph_parallel%lib_appendix libboost_mpi%{lib_appendix}
+%define all_libs %{most_libs} boost-graph-parallel%{lib_appendix} boost-mpi%{lib_appendix}
 %else
 %define all_libs %{most_libs}
 %endif
@@ -56,6 +62,7 @@ BuildRequires:  bzip2-devel
 BuildRequires:  zlib-devel
 BuildRequires:  expat-devel
 BuildRequires:  libicu-devel
+BuildRequires:  python
 BuildRequires:  python-devel
 BuildRequires:  xz
 BuildRequires:  fdupes
@@ -63,7 +70,7 @@ Url:            http://www.boost.org
 Summary:        Boost C++ Libraries
 License:        BSL-1.0
 Group:          Base/Libraries
-Version:        1.57.0
+Version:        1.58.0
 Release:        0
 Source0:        %{name}_%{file_version}.tar.bz2
 Source1:        boost-rpmlintrc
@@ -120,234 +127,234 @@ BuildArch:      noarch
 This package contains the documentation of the boost dynamic libraries
 in HTML format.
 
-%package     -n libboost_atomic%{lib_appendix}
+%package     -n boost-atomic%{lib_appendix}
 Summary:        Run-Time component of boost atomic library
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 
-%description -n libboost_atomic%{lib_appendix}
+%description -n boost-atomic%{lib_appendix}
 Run-Time support for Boost.Atomic, a library that provides atomic data types
 and operations on these data types, as well as memory ordering constraints
 required for coordinating multiple threads through atomic variables.
 
-%package     -n libboost_container%{lib_appendix}
+%package     -n boost-container%{lib_appendix}
 Summary:        Boost::Container Runtime libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 
-%description -n libboost_container%{lib_appendix}
+%description -n boost-container%{lib_appendix}
 This package contains the Boost Container runtime libraries.
 
-%package     -n libboost_context%{lib_appendix}
+%package     -n boost-context%{lib_appendix}
 Summary:        Run-Time component of boost context switching library
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 
-%description -n libboost_context%{lib_appendix}
+%description -n boost-context%{lib_appendix}
 Run-Time support for Boost.Context, a foundational library that
 provides a sort of cooperative multitasking on a single thread.
 
-%package     -n libboost_coroutine%{lib_appendix}
+%package     -n boost-coroutine%{lib_appendix}
 Summary:        Boost::Coroutine Runtime libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 
-%description -n libboost_coroutine%{lib_appendix}
+%description -n boost-coroutine%{lib_appendix}
 This package contains the Boost Coroutine runtime libraries.
 
-%package     -n libboost_date_time%{lib_appendix}
+%package     -n boost-date-time%{lib_appendix}
 Summary:        Boost::Date.Time Runtime libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
-Provides:       boost-datetime
+Provides:       boost-date-time
 
-%description -n libboost_date_time%{lib_appendix}
+%description -n boost-date-time%{lib_appendix}
 This package contains the Boost Date.Time runtime libraries.
 
-%package     -n libboost_filesystem%{lib_appendix}
+%package     -n boost-filesystem%{lib_appendix}
 Summary:        Boost::Filesystem Runtime Libraries
 Group:          System/Localization
 Requires:       boost-license%{lib_appendix}
 Provides:		boost-filesystem
 
-%description -n libboost_filesystem%{lib_appendix}
+%description -n boost-filesystem%{lib_appendix}
 This package contains the Boost::Filesystem libraries.
 
-%package     -n libboost_graph%{lib_appendix}
+%package     -n boost-graph%{lib_appendix}
 Summary:        Boost::Graph Runtime Libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:		boost-graph
 
-%description -n libboost_graph%{lib_appendix}
+%description -n boost-graph%{lib_appendix}
 This package contains the Boost::Graph Runtime libraries.
 
 %if %build_mpi
-%package     -n libboost_graph_parallel%lib_appendix
+%package     -n boost-graph-parallel%{lib_appendix}
 Summary:        Boost graph::distributed runtime libraries
 Group:          System/Libraries
-Requires:       boost-license%lib_appendix
+Requires:       boost-license%{lib_appendix}
 
-%description -n libboost_graph_parallel%lib_appendix
+%description -n boost-graph-parallel%{lib_appendix}
 This package contains the boost::graph::distributed runtime libraries.
 %endif
 
-%package     -n libboost_iostreams%{lib_appendix}
+%package     -n boost-iostreams%{lib_appendix}
 Summary:        Boost::IOStreams Runtime Libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:		boost-iostreams
 
-%description -n libboost_iostreams%{lib_appendix}
+%description -n boost-iostreams%{lib_appendix}
 This package contains the Boost::IOStreams Runtime libraries.
 
-%package     -n libboost_log%{lib_appendix}
+%package     -n boost-log%{lib_appendix}
 Summary:        Run-Time component of boost logging library
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:		boost-log
 
-%description -n libboost_log%{lib_appendix}
+%description -n boost-log%{lib_appendix}
 Boost.Log library aims to make logging significantly easier for the
 application developer. It provides a wide range of out-of-the-box
 tools along with public interfaces for extending the library.
 
-%package     -n libboost_math%{lib_appendix}
+%package     -n boost-math%{lib_appendix}
 Summary:        Boost::Math Runtime Libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:		boost-math
 
-%description -n libboost_math%{lib_appendix}
+%description -n boost-math%{lib_appendix}
 This package contains the Boost::Math Runtime libraries.
 
 %if %build_mpi
-%package     -n libboost_mpi%{lib_appendix}
+%package     -n boost-mpi%{lib_appendix}
 Summary:        Boost::MPI Runtime libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:		boost-mpi
 
-%description -n libboost_mpi%{lib_appendix}
+%description -n boost-mpi%{lib_appendix}
 This package contains the Boost::MPI Runtime libraries.
 %endif
 
-%package    -n libboost_test%{lib_appendix}
+%package    -n boost-test%{lib_appendix}
 Summary:        Boost::Test Runtime Libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:		boost-test
 
-%description -n libboost_test%{lib_appendix}
+%description -n boost-test%{lib_appendix}
 This package contains the Boost::Test runtime libraries.
 
-%package     -n libboost_program_options%{lib_appendix}
+%package     -n boost-program-options%{lib_appendix}
 Summary:        Boost::ProgramOptions Runtime libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:       boost-program-options
 
-%description -n libboost_program_options%{lib_appendix}
+%description -n boost-program-options%{lib_appendix}
 This package contains the Boost::ProgramOptions Runtime libraries.
 
 
-%package     -n libboost_python%{lib_appendix}
+%package     -n boost-python%{lib_appendix}
 Summary:        Boost::Python Runtime Libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:       boost-python
 
-%description -n libboost_python%{lib_appendix}
+%description -n boost-python%{lib_appendix}
 This package contains the Boost::Python Runtime libraries.
 
-%package     -n libboost_serialization%{lib_appendix}
+%package     -n boost-serialization%{lib_appendix}
 Summary:        Boost::Serialization Runtime Libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:       boost-serialization
 
-%description -n libboost_serialization%{lib_appendix}
+%description -n boost-serialization%{lib_appendix}
 This package contains the Boost::Serialization Runtime libraries.
 
-%package     -n libboost_signals%{lib_appendix}
+%package     -n boost-signals%{lib_appendix}
 Summary:        Boost::Signals Runtime Libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:		boost-signals
 
-%description -n libboost_signals%{lib_appendix}
+%description -n boost-signals%{lib_appendix}
 This package contains the Boost::Signals Runtime libraries.
 
-%package     -n libboost_system%{lib_appendix}
+%package     -n boost-system%{lib_appendix}
 Summary:        Boost::System Runtime Libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:       boost-system
 
-%description -n libboost_system%{lib_appendix}
+%description -n boost-system%{lib_appendix}
 This package contains the Boost::System runtime libraries.
 
-%package     -n libboost_thread%{lib_appendix}
+%package     -n boost-thread%{lib_appendix}
 Summary:        Boost::Thread Runtime Libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:       boost-thread
 
-%description -n libboost_thread%{lib_appendix}
+%description -n boost-thread%{lib_appendix}
 This package contains the Boost::Thread runtime libraries.
 
-%package     -n libboost_wave%{lib_appendix}
+%package     -n boost-wave%{lib_appendix}
 Summary:        Boost::Wave Runtime Libraries
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:       boost-wave
 
-%description -n libboost_wave%{lib_appendix}
+%description -n boost-wave%{lib_appendix}
 This package contains the Boost::Wave runtime libraries.
 
-%package     -n libboost_regex%{lib_appendix}
+%package     -n boost-regex%{lib_appendix}
 Summary:        The Boost::Regex runtime library
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:       boost-regex
 
-%description -n libboost_regex%{lib_appendix}
+%description -n boost-regex%{lib_appendix}
 This package contains the Boost::Regex runtime library.
 
-%package     -n libboost_random%{lib_appendix}
+%package     -n boost-random%{lib_appendix}
 Summary:        The Boost::Random runtime library
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:       boost-random
 
-%description -n libboost_random%{lib_appendix}
+%description -n boost-random%{lib_appendix}
 This package contains the Boost::Random runtime library.
 
-%package     -n libboost_chrono%{lib_appendix}
+%package     -n boost-chrono%{lib_appendix}
 Summary:        The Boost::Chrono runtime library
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:       boost-chrono
 
-%description -n libboost_chrono%{lib_appendix}
+%description -n boost-chrono%{lib_appendix}
 This package contains the Boost::Chrono runtime library.
 
-%package     -n libboost_locale%{lib_appendix}
+%package     -n boost-locale%{lib_appendix}
 Summary:        The Boost::Locale runtime library
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:       boost-locale
 
-%description -n libboost_locale%{lib_appendix}
+%description -n boost-locale%{lib_appendix}
 This package contains the Boost::Locale runtime library.
 
-%package     -n libboost_timer%{lib_appendix}
+%package     -n boost-timer%{lib_appendix}
 Summary:        The Boost::Timer runtime library
 Group:          System/Libraries
 Requires:       boost-license%{lib_appendix}
 Provides:       boost-timer
 
-%description -n libboost_timer%{lib_appendix}
+%description -n boost-timer%{lib_appendix}
 This package contains the Boost::Timer runtime library.
 
 
@@ -440,6 +447,14 @@ cd doc
 ../b2 --user-config=../user-config.jam --v2 man
 %endif
 
+%check
+%if %{run_tests}
+BOOST_LIBS="chrono,program_options,thread,system,filesystem,date_time,regex,serialization,iostreams,random,test"
+    chmod 777 ./run_test.sh
+    echo "RUN run_test.sh"
+    ./run_test.sh %{version} $BOOST_LIBS || exit 0
+%endif
+
 %install
 
 # Read shared build instructions
@@ -519,64 +534,64 @@ rm -f %{buildroot}%{_libdir}/*.a
 mkdir -p %{buildroot}/usr/share/licenses
 cp -af LICENSE_1_0.txt %{buildroot}/usr/share/licenses/%{name}
 
-%post -n libboost_atomic%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_container%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_context%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_coroutine%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_date_time%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_filesystem%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_iostreams%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_log%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_test%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_program_options%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_python%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_regex%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_serialization%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_signals%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_thread%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_math%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-atomic%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-container%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-context%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-coroutine%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-date-time%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-filesystem%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-iostreams%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-log%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-test%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-program-options%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-python%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-regex%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-serialization%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-signals%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-thread%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-math%{lib_appendix} -p /sbin/ldconfig
 %if %build_mpi
-%post -n libboost_mpi%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-mpi%{lib_appendix} -p /sbin/ldconfig
 %endif
-%post -n libboost_graph%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_system%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_wave%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_random%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_chrono%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_locale%{lib_appendix} -p /sbin/ldconfig
-%post -n libboost_timer%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-graph%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-system%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-wave%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-random%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-chrono%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-locale%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-timer%{lib_appendix} -p /sbin/ldconfig
 %if %build_mpi
-%post -n libboost_graph_parallel%{lib_appendix} -p /sbin/ldconfig
+%post -n boost-graph-parallel%{lib_appendix} -p /sbin/ldconfig
 %endif
 
-%postun -n libboost_atomic%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_container%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_context%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_coroutine%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_date_time%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_filesystem%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_iostreams%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_log%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_test%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_program_options%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_python%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_regex%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_serialization%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_signals%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_thread%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_math%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-atomic%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-container%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-context%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-coroutine%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-date-time%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-filesystem%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-iostreams%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-log%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-test%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-program-options%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-python%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-regex%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-serialization%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-signals%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-thread%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-math%{lib_appendix} -p /sbin/ldconfig
 %if %build_mpi
-%postun -n libboost_mpi%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-mpi%{lib_appendix} -p /sbin/ldconfig
 %endif
-%postun -n libboost_graph%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_system%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_wave%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_random%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_chrono%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_locale%{lib_appendix} -p /sbin/ldconfig
-%postun -n libboost_timer%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-graph%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-system%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-wave%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-random%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-chrono%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-locale%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-timer%{lib_appendix} -p /sbin/ldconfig
 %if %build_mpi
-%postun -n libboost_graph_parallel%{lib_appendix} -p /sbin/ldconfig
+%postun -n boost-graph-parallel%{lib_appendix} -p /sbin/ldconfig
 %endif
 
 %files
@@ -590,134 +605,134 @@ cp -af LICENSE_1_0.txt %{buildroot}/usr/share/licenses/%{name}
 #%%doc %%{_docdir}/NEWS
 %doc %{_docdir}/LICENSE_1_0.txt
 
-%files -n libboost_atomic%{lib_appendix}
+%files -n boost-atomic%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_atomic*.so.*
 
-%files -n libboost_container%{lib_appendix}
+%files -n boost-container%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_container*.so.*
 
 %if %build_context
 %manifest %{name}.manifest
-%files -n libboost_context%{lib_appendix}
+%files -n boost-context%{lib_appendix}
 %defattr(-, root, root, -)
 %{_libdir}/libboost_context*.so.*
 
-%files -n libboost_coroutine%{lib_appendix}
+%files -n boost-coroutine%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_coroutine*.so.*
 %endif
 
-%files -n libboost_date_time%{lib_appendix}
+%files -n boost-date-time%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_date_time*.so.*
 
-%files -n libboost_filesystem%{lib_appendix}
+%files -n boost-filesystem%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_filesystem*.so.*
 
-%files -n libboost_graph%{lib_appendix}
+%files -n boost-graph%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_graph.so.*
 
 %if %build_mpi
-%files -n libboost_graph_parallel%lib_appendix
+%files -n boost-graph-parallel%lib_appendix
 %manifest %{name}.manifest
 %defattr(-,root,root)
 %_libdir/libboost_graph_parallel.so.*
 %endif
 
-%files -n libboost_iostreams%{lib_appendix}
+%files -n boost-iostreams%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_iostreams*.so.*
 
-%files -n libboost_log%{lib_appendix}
+%files -n boost-log%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_log*.so.*
 
-%files -n libboost_math%{lib_appendix}
+%files -n boost-math%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_math_*.so.*
 
 %if %build_mpi
 %manifest %{name}.manifest
-%files -n libboost_mpi%{lib_appendix}
+%files -n boost-mpi%{lib_appendix}
 %defattr(-, root, root, -)
 %{_libdir}/libboost_mpi*.so.*
 %endif
 
-%files -n libboost_test%{lib_appendix}
+%files -n boost-test%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_prg_exec_monitor*.so.*
 %{_libdir}/libboost_unit_test_framework*.so.*
 
-%files -n libboost_program_options%{lib_appendix}
+%files -n boost-program-options%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_program_options*.so.*
 
-%files -n libboost_python%{lib_appendix}
+%files -n boost-python%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_python*.so.*
 
-%files -n libboost_serialization%{lib_appendix}
+%files -n boost-serialization%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_*serialization*.so.*
 
-%files -n libboost_signals%{lib_appendix}
+%files -n boost-signals%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_signals*.so.*
 
-%files -n libboost_system%{lib_appendix}
+%files -n boost-system%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_system*.so.*
 
-%files -n libboost_thread%{lib_appendix}
+%files -n boost-thread%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_thread*.so.*
 
-%files -n libboost_wave%{lib_appendix}
+%files -n boost-wave%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_wave*.so.*
 
-%files -n libboost_regex%{lib_appendix}
+%files -n boost-regex%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_regex*.so.*
 
-%files -n libboost_random%{lib_appendix}
+%files -n boost-random%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_random*.so.*
 
-%files -n libboost_chrono%{lib_appendix}
+%files -n boost-chrono%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_chrono*.so.*
 
-%files -n libboost_locale%{lib_appendix}
+%files -n boost-locale%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_locale*.so.*
 
-%files -n libboost_timer%{lib_appendix}
+%files -n boost-timer%{lib_appendix}
 %manifest %{name}.manifest
 %defattr(-, root, root, -)
 %{_libdir}/libboost_timer*.so.*
